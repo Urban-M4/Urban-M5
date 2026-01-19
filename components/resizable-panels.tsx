@@ -115,33 +115,33 @@ export function ResizablePanels({
 
   const containerRef = useRef<HTMLDivElement>(null)
 
-  const handleHorizontalDrag = useCallback(
+  const handleVerticalDrag = useCallback(
     (delta: number) => {
       if (!containerRef.current) return
-      const containerHeight = containerRef.current.clientHeight
-      const deltaPercent = (delta / containerHeight) * 100
+      const containerWidth = containerRef.current.clientWidth
+      const deltaPercent = (delta / containerWidth) * 100
       const newSplit = Math.min(Math.max(horizontalSplit + deltaPercent, 20), 80)
       setHorizontalSplit(newSplit)
     },
     [horizontalSplit, setHorizontalSplit]
   )
 
-  const handleVerticalTopDrag = useCallback(
+  const handleHorizontalLeftDrag = useCallback(
     (delta: number) => {
       if (!containerRef.current) return
-      const containerWidth = containerRef.current.clientWidth
-      const deltaPercent = (delta / containerWidth) * 100
+      const containerHeight = containerRef.current.clientHeight
+      const deltaPercent = (delta / containerHeight) * 100
       const newSplit = Math.min(Math.max(verticalSplitTop + deltaPercent, 20), 80)
       setVerticalSplitTop(newSplit)
     },
     [verticalSplitTop, setVerticalSplitTop]
   )
 
-  const handleVerticalBottomDrag = useCallback(
+  const handleHorizontalRightDrag = useCallback(
     (delta: number) => {
       if (!containerRef.current) return
-      const containerWidth = containerRef.current.clientWidth
-      const deltaPercent = (delta / containerWidth) * 100
+      const containerHeight = containerRef.current.clientHeight
+      const deltaPercent = (delta / containerHeight) * 100
       const newSplit = Math.min(Math.max(verticalSplitBottom + deltaPercent, 20), 80)
       setVerticalSplitBottom(newSplit)
     },
@@ -149,28 +149,28 @@ export function ResizablePanels({
   )
 
   return (
-    <div ref={containerRef} className="flex h-full w-full flex-col">
-      {/* Top Row */}
-      <div className="flex" style={{ height: `${horizontalSplit}%` }}>
-        <div style={{ width: `${verticalSplitTop}%` }} className="overflow-hidden">
+    <div ref={containerRef} className="flex h-full w-full flex-row">
+      {/* Left Column */}
+      <div className="flex flex-col" style={{ width: `${horizontalSplit}%` }}>
+        <div style={{ height: `${verticalSplitTop}%` }} className="overflow-hidden">
           {topLeft}
         </div>
-        <ResizableHandle direction="horizontal" onDrag={handleVerticalTopDrag} />
-        <div style={{ width: `${100 - verticalSplitTop}%` }} className="overflow-hidden">
-          {topRight}
+        <ResizableHandle direction="vertical" onDrag={handleHorizontalLeftDrag} />
+        <div style={{ height: `${100 - verticalSplitTop}%` }} className="overflow-hidden">
+          {bottomLeft}
         </div>
       </div>
 
-      {/* Horizontal Divider */}
-      <ResizableHandle direction="vertical" onDrag={handleHorizontalDrag} />
+      {/* Vertical Divider */}
+      <ResizableHandle direction="horizontal" onDrag={handleVerticalDrag} />
 
-      {/* Bottom Row */}
-      <div className="flex flex-1">
-        <div style={{ width: `${verticalSplitBottom}%` }} className="overflow-hidden">
-          {bottomLeft}
+      {/* Right Column */}
+      <div className="flex flex-col flex-1">
+        <div style={{ height: `${verticalSplitBottom}%` }} className="overflow-hidden">
+          {topRight}
         </div>
-        <ResizableHandle direction="horizontal" onDrag={handleVerticalBottomDrag} />
-        <div style={{ width: `${100 - verticalSplitBottom}%` }} className="overflow-hidden">
+        <ResizableHandle direction="vertical" onDrag={handleHorizontalRightDrag} />
+        <div style={{ height: `${100 - verticalSplitBottom}%` }} className="overflow-hidden">
           {bottomRight}
         </div>
       </div>
