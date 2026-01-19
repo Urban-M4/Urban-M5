@@ -1,164 +1,90 @@
 "use client"
 
 import React, { useEffect, useRef } from "react"
+import { Map, Source, Layer } from "@vis.gl/react-maplibre"
 import { useStore } from "@/lib/store"
 import { SCORE_HEX } from "@/lib/types"
 import { PanelHeader } from "./panel-header"
 
 export function MapPanel() {
-  const canvasRef = useRef<HTMLCanvasElement>(null)
-  const containerRef = useRef<HTMLDivElement>(null)
+  const mapRef = useRef(null)
   const { images, selectedImageId, selectImage, scoreFilter } = useStore()
-  
+
   const filteredImages = images.filter(
     img => img.qualityScore >= scoreFilter.min && img.qualityScore <= scoreFilter.max
   )
-  
+
   // Calculate bounds
-  const bounds = {
-    minLat: Math.min(...filteredImages.map(img => img.lat)) - 2,
-    maxLat: Math.max(...filteredImages.map(img => img.lat)) + 2,
-    minLng: Math.min(...filteredImages.map(img => img.lng)) - 5,
-    maxLng: Math.max(...filteredImages.map(img => img.lng)) + 5,
+  const calculateBounds = () => {
+    if (filteredImages.length === 0) return null
+
+    const lats = filteredImages.map(img => img.lat)
+    const lngs = filteredImages.map(img => img.lng)
+    const minLat = Math.min(...lats) - 2
+    const maxLat = Math.max(...lats) + 2
+    const minLng = Math.min(...lngs) - 5
+    const maxLng = Math.max(...lngs) + 5
+
+    return [[minLng, minLat], [maxLng, maxLat]] as [[number, number], [number, number]]
   }
-  
+
+  const bounds = calculateBounds()
+
+  // Update feature state for selected marker
   useEffect(() => {
-    const canvas = canvasRef.current
-    const container = containerRef.current
-    if (!canvas || !container) return
-    
-    const resizeObserver = new ResizeObserver(() => {
-      canvas.width = container.clientWidth
-      canvas.height = container.clientHeight
-      drawMap()
-    })
-    
-    resizeObserver.observe(container)
-    return () => resizeObserver.disconnect()
-  }, [])
-  
-  useEffect(() => {
-    drawMap()
-  }, [filteredImages, selectedImageId])
-  
-  const drawMap = () => {
-    const canvas = canvasRef.current
-    if (!canvas) return
-    
-    const ctx = canvas.getContext("2d")
-    if (!ctx) return
-    
-    const width = canvas.width
-    const height = canvas.height
-    
-    // Clear
-    ctx.fillStyle = "#0f172a"
-    ctx.fillRect(0, 0, width, height)
-    
-    // Draw grid
-    ctx.strokeStyle = "#1e293b"
-    ctx.lineWidth = 1
-    
-    for (let i = 0; i <= 10; i++) {
-      const x = (i / 10) * width
-      ctx.beginPath()
-      ctx.moveTo(x, 0)
-      ctx.lineTo(x, height)
-      ctx.stroke()
-      
-      const y = (i / 10) * height
-      ctx.beginPath()
-      ctx.moveTo(0, y)
-      ctx.lineTo(width, y)
-      ctx.stroke()
-    }
-    
-    // Draw US outline (simplified)
-    ctx.strokeStyle = "#334155"
-    ctx.lineWidth = 2
-    ctx.beginPath()
-    
-    const toCanvas = (lat: number, lng: number) => ({
-      x: ((lng - bounds.minLng) / (bounds.maxLng - bounds.minLng)) * width,
-      y: height - ((lat - bounds.minLat) / (bounds.maxLat - bounds.minLat)) * height,
-    })
-    
-    // Draw markers
+    if (!mapRef.current) return
+
     filteredImages.forEach((image) => {
-      const pos = toCanvas(image.lat, image.lng)
-      const isSelected = image.id === selectedImageId
-      const color = SCORE_HEX[image.qualityScore] || SCORE_HEX[3]
-      
-      // Outer glow for selected
-      if (isSelected) {
-        ctx.beginPath()
-        ctx.arc(pos.x, pos.y, 16, 0, Math.PI * 2)
-        ctx.fillStyle = `${color}40`
-        ctx.fill()
-      }
-      
-      // Marker
-      ctx.beginPath()
-      ctx.arc(pos.x, pos.y, isSelected ? 10 : 7, 0, Math.PI * 2)
-      ctx.fillStyle = color
-      ctx.fill()
-      
-      // Border
-      ctx.strokeStyle = isSelected ? "#fff" : "#000"
-      ctx.lineWidth = isSelected ? 3 : 1
-      ctx.stroke()
-      
-      // Score indicator
-      ctx.fillStyle = "#fff"
-      ctx.font = "bold 10px sans-serif"
-      ctx.textAlign = "center"
-      ctx.textBaseline = "middle"
-      ctx.fillText(String(image.qualityScore), pos.x, pos.y)
+      mapRef.current.setFeatureState(
+        { source: "image-markers", id: image.id },
+        { selected: image.id === selectedImageId }
+      )
     })
-    
-    // Legend
-    ctx.fillStyle = "#94a3b8"
-    ctx.font = "11px sans-serif"
-    ctx.textAlign = "left"
-    ctx.fillText("Score:", 10, height - 40)
-    
-    Object.entries(SCORE_HEX).forEach(([score, color], index) => {
-      const x = 55 + index * 30
-      ctx.beginPath()
-      ctx.arc(x, height - 40, 8, 0, Math.PI * 2)
-      ctx.fillStyle = color
-      ctx.fill()
-      ctx.fillStyle = "#fff"
-      ctx.font = "bold 9px sans-serif"
-      ctx.textAlign = "center"
-      ctx.fillText(score, x, height - 40)
-    })
+  }, [selectedImageId, filteredImages])
+
+  // Create GeoJSON from filtered images
+  const geojson = {
+    type: "FeatureCollection" as const,
+    features: filteredImages.map(img => ({
+      type: "Feature" as const,
+      id: img.id,
+      properties: {
+        qualityScore: img.qualityScore,
+        name: img.name,
+      },
+      geometry: {
+        type: "Point" as const,
+        coordinates: [img.lng, img.lat],
+      },
+    })),
   }
-  
-  const handleClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    const canvas = canvasRef.current
-    if (!canvas) return
-    
-    const rect = canvas.getBoundingClientRect()
-    const x = e.clientX - rect.left
-    const y = e.clientY - rect.top
-    
-    const width = canvas.width
-    const height = canvas.height
-    
-    // Find clicked marker
-    for (const image of filteredImages) {
-      const posX = ((image.lng - bounds.minLng) / (bounds.maxLng - bounds.minLng)) * width
-      const posY = height - ((image.lat - bounds.minLat) / (bounds.maxLat - bounds.minLat)) * height
-      
-      const distance = Math.sqrt((x - posX) ** 2 + (y - posY) ** 2)
-      if (distance < 15) {
-        selectImage(image.id)
-        return
-      }
+
+  const handleMapClick = (e: any) => {
+    if (!mapRef.current) return
+
+    const features = mapRef.current.queryRenderedFeatures({
+      layers: ["map-markers"],
+    })
+
+    if (features.length > 0) {
+      const feature = features[0]
+      selectImage(feature.id)
     }
   }
-  
+
+  if (!bounds) {
+    return (
+      <div className="flex flex-col h-full bg-card">
+        <PanelHeader title="Map View">
+          <span className="text-xs text-muted-foreground">0 locations</span>
+        </PanelHeader>
+        <div className="flex-1 flex items-center justify-center text-muted-foreground">
+          No images to display
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="flex flex-col h-full bg-card">
       <PanelHeader title="Map View">
@@ -166,12 +92,74 @@ export function MapPanel() {
           {filteredImages.length} locations
         </span>
       </PanelHeader>
-      <div ref={containerRef} className="flex-1 relative">
-        <canvas
-          ref={canvasRef}
-          onClick={handleClick}
-          className="absolute inset-0 cursor-pointer"
-        />
+      <div className="flex-1 relative overflow-hidden">
+        <Map
+          ref={mapRef}
+          mapStyle="https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
+          initialViewState={{
+            bounds,
+            padding: { top: 50, bottom: 50, left: 50, right: 50 },
+          }}
+          onClick={handleMapClick}
+          style={{ width: "100%", height: "100%" }}
+        >
+          <Source id="image-markers" type="geojson" data={geojson}>
+            <Layer
+              id="map-markers"
+              type="circle"
+              paint={{
+                "circle-radius": [
+                  "case",
+                  ["boolean", ["feature-state", "selected"], false],
+                  10,
+                  7,
+                ],
+                "circle-color": [
+                  "case",
+                  ["==", ["get", "qualityScore"], 1],
+                  SCORE_HEX[1],
+                  ["==", ["get", "qualityScore"], 2],
+                  SCORE_HEX[2],
+                  ["==", ["get", "qualityScore"], 3],
+                  SCORE_HEX[3],
+                  ["==", ["get", "qualityScore"], 4],
+                  SCORE_HEX[4],
+                  ["==", ["get", "qualityScore"], 5],
+                  SCORE_HEX[5],
+                  SCORE_HEX[3],
+                ],
+                "circle-stroke-width": [
+                  "case",
+                  ["boolean", ["feature-state", "selected"], false],
+                  3,
+                  1,
+                ],
+                "circle-stroke-color": [
+                  "case",
+                  ["boolean", ["feature-state", "selected"], false],
+                  "#fff",
+                  "#000",
+                ],
+              }}
+            />
+          </Source>
+        </Map>
+
+        {/* Legend */}
+        <div className="absolute bottom-4 left-4 bg-black/50 rounded px-3 py-2 text-xs text-slate-400 pointer-events-none">
+          <div className="mb-2">Score:</div>
+          <div className="flex gap-2">
+            {Object.entries(SCORE_HEX).map(([score, color]) => (
+              <div key={score} className="flex items-center gap-1">
+                <div
+                  className="w-3 h-3 rounded-full"
+                  style={{ backgroundColor: color }}
+                />
+                <span className="font-bold text-white">{score}</span>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   )
