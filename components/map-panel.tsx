@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useRef } from "react"
+import React, { useEffect, useMemo, useRef } from "react"
 import { Map, Source, Layer } from "@vis.gl/react-maplibre"
 import { useStore } from "@/lib/store"
 import { SCORE_HEX } from "@/lib/types"
@@ -29,6 +29,7 @@ export function MapPanel() {
   }
 
   const bounds = calculateBounds()
+  const imageLookup: Record<string, number> = useMemo(() => Object.fromEntries(images.map(img => [img.id, Number(img.id.replace('img-', ''))])), [images])
 
   // Update feature state for selected marker
   useEffect(() => {
@@ -36,7 +37,7 @@ export function MapPanel() {
 
     filteredImages.forEach((image) => {
       mapRef.current.setFeatureState(
-        { source: "image-markers", id: image.id },
+        { source: "image-markers", id: imageLookup[image.id] },
         { selected: image.id === selectedImageId }
       )
     })
@@ -47,10 +48,11 @@ export function MapPanel() {
     type: "FeatureCollection" as const,
     features: filteredImages.map(img => ({
       type: "Feature" as const,
-      id: img.id,
+      id: imageLookup[img.id],
       properties: {
         qualityScore: img.qualityScore,
         name: img.name,
+        id: img.id,
       },
       geometry: {
         type: "Point" as const,
@@ -62,13 +64,13 @@ export function MapPanel() {
   const handleMapClick = (e: any) => {
     if (!mapRef.current) return
 
-    const features = mapRef.current.queryRenderedFeatures({
+    const features = mapRef.current.queryRenderedFeatures(e.point, {
       layers: ["map-markers"],
     })
 
     if (features.length > 0) {
       const feature = features[0]
-      selectImage(feature.id)
+      selectImage(`img-${feature.id}`)
     }
   }
 
