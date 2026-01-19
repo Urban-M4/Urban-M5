@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["streetflex"]
+
+[project]
+authors = [{ name = "Alexander Hadjiivanov" }]
+name = "streetflex"
+version = "2025"
+requires-python = ">= 3.12"
+dependencies = ["reflex", "plotly"]
+description = "Streetscapes vis tool in Reflex and Plotly"
+readme = "README.md"
+license = "MIT"
