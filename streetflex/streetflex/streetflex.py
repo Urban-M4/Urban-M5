@@ -3,7 +3,6 @@ import plotly.express as px
 import pandas as pd
 import plotly.graph_objects as go
 
-
 class MapState(rx.State):
 
     figure: go.Figure = go.Figure()
@@ -64,6 +63,6 @@ def index() -> rx.Component:
         ),
     )
 
-
 app = rx.App()
 app.add_page(index)
+
