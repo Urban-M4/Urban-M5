@@ -10,7 +10,7 @@ authors = [{ name = "Alexander Hadjiivanov" }]
 name = "streetflex"
 version = "2025"
 requires-python = ">= 3.12"
-dependencies = ["reflex", "plotly"]
-description = "Streetscapes vis tool in Reflex and Plotly"
+dependencies = ["reflex", "pandas", "plotly"]
+description = "GUI segmentation and annotation tool for Streetscapes"
 readme = "README.md"
 license = "MIT"
