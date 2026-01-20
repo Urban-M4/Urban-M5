@@ -1,0 +1,39 @@
+{
+    "images": [
+        {
+            "image": "183375246977980.jpg",
+            "longitude": 4.9009338,
+            "latitude": 52.37294,
+            "segments": [
+                {
+                    "category": "bike",
+                    "confidence": 0.5,
+                    "x_min": 181,
+                    "x_max": 355,
+                    "y_min": 560,
+                    "y_max": 673
+                }
+            ]
+        },
+        {
+            "image": "dam.jpg",
+            "longitude": 4.893212,
+            "latitude": 52.372936,
+            "segments": []
+        }
+    ],
+    "categories": {
+        "bike": {
+            "color": "#FF0000",
+            "label": "Bike"
+        },
+        "car": {
+            "color": "#0000FF",
+            "label": "Car"
+        },
+        "building": {
+            "color": "#00FF00",
+            "label": "Building"
+        }
+    }
+}
