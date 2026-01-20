@@ -6,6 +6,6 @@
 
 Run
 
-`streetflex`
+`reflex run`
 
 from the root directory.
