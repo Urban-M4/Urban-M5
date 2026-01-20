@@ -11,6 +11,6 @@ name = "streetflex"
 version = "2025"
 requires-python = ">= 3.12"
 dependencies = ["reflex", "pandas", "plotly"]
-description = "GUI segmentation and annotation tool for Streetscapes"
+description = "GUI segmentation and annotation tool for Streetscapes."
 readme = "README.md"
-license = "MIT"
+license = "Apache-2.0"
