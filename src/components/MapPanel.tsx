@@ -71,7 +71,6 @@ export function MapPanel() {
     if (features.length > 0) {
       // TODO handle/complain when multiple features
       const feature = features[0];
-      console.log(feature);
       setCurrentImageId(feature.properties.id);
     }
   }

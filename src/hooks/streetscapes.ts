@@ -98,9 +98,9 @@ export function useGetImages(filter: ImagesFilter | undefined = undefined) {
   //         // TODO filter parameters
   //     }
   // })
-  console.log("Filtering images with", filter);
   return {
     data: mock_data,
+    filter,
     isLoading: false,
     error: null,
   };
@@ -131,7 +131,7 @@ export function useAllTags() {
 }
 
 export function useAllLabels() {
-  const data = {
+  const data: Record<string, string> = {
     bike: "#ff0000",
     car: "#00ff00",
     person: "#0000ff",

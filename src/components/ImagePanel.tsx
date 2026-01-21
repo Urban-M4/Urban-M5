@@ -4,6 +4,9 @@ import { Tags } from "@/components/Tags";
 import { Notes } from "@/components/Notes";
 import { Segmentations } from "@/components/Segmentations";
 
+import "@annotorious/react/annotorious-react.css";
+import { AnnotatedImage } from "./AnnotatedImage";
+
 export function ImagePanel() {
   const { data: imageInfo, isLoading, error } = useCurrentImageInfo();
 
@@ -22,10 +25,10 @@ export function ImagePanel() {
   return (
     <div className="flex-1 p-2 gap-4 flex flex-col">
       <h1 className="text-xl">Image: {imageInfo.id}</h1>
-      <img
-        src={imageInfo.url}
-        alt={`Streetscape ${imageInfo.id}`}
-        className="max-w-full h-auto"
+      <AnnotatedImage
+        id={imageInfo.id}
+        url={imageInfo.url}
+        segmentations={imageInfo.segmentations}
       />
       <Tags onChange={() => {}} tags={imageInfo.tags} />
       <Rating value={imageInfo.rating} onChange={() => {}} />
