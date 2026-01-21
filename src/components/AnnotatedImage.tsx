@@ -7,6 +7,7 @@ import {
   type DrawingStyle,
   ImageAnnotator,
   UserSelectAction,
+  ShapeType,
 } from "@annotorious/react";
 import { useEffect } from "react";
 
@@ -32,7 +33,7 @@ function mapSegmentationsToAnnotations(
     segmentation.instances.map((instance, instanceIndex) => {
       const id = [
         "seg",
-        segmentation.model_name,
+        segmentation.name,
         segmentationIndex,
         instance.label,
         instanceIndex,
@@ -76,7 +77,7 @@ function mapSegmentationsToAnnotations(
         target: {
           annotation: id,
           selector: {
-            type: "MULTIPOLYGON",
+            type: ShapeType.MULTIPOLYGON,
             geometry: {
               bounds: overallBounds,
               polygons,
@@ -91,12 +92,7 @@ function mapSegmentationsToAnnotations(
             value: instance.label,
           },
         ],
-        properties: {
-          modelName: segmentation.model_name,
-          runArgs: segmentation.run_args,
-          segmentationNotes: segmentation.notes,
-        },
-      } as ImageAnnotation;
+      };
     }),
   );
 }

@@ -12,8 +12,9 @@ export type Instance = {
 };
 
 export interface Segmentation {
-  model_name: string;
-  run_args: string;
+  model: string;
+  name: string;
+  params: string;
   instances: Instance[];
   notes: string;
 }
@@ -39,8 +40,10 @@ const mock_data: StreetscapeImage[] = [
     notes: "Nice view of the canal.",
     segmentations: [
       {
-        model_name: "model-v1",
-        run_args: "--threshold 0.5",
+        model: "DinoSAM",
+        name: "my run 1",
+        params:
+          '{"sky": null, "building": {"window": null, "door": null}, "tree": null, "car": null, "truck": null, "road": null}',
         notes: "Clear sky, good lighting.",
         instances: [
           {
@@ -72,10 +75,11 @@ const mock_data: StreetscapeImage[] = [
 ] as const;
 
 interface ImagesFilter {
-  source: string;
+  sources: string[];
   tags: string[];
-  max_captured_at: Date;
-  min_captured_at: Date;
+  max_captured_at?: Date;
+  min_captured_at?: Date;
+  labels: string[];
 }
 
 export function useStreetscapes() {
@@ -122,6 +126,7 @@ export function useCurrentImageInfo() {
 }
 
 export function useAllTags() {
+  // TODO once the OpenAPI spec is ready, replace with actual API call
   const data = Array.from(new Set(mock_data.flatMap((img) => img.tags)));
   return {
     data,
@@ -131,10 +136,17 @@ export function useAllTags() {
 }
 
 export function useAllLabels() {
+  // TODO once the OpenAPI spec is ready, replace with actual API call
+
   const data: Record<string, string> = {
     bike: "#ff0000",
     car: "#00ff00",
     person: "#0000ff",
   };
   return data;
+}
+
+export function useAllSources() {
+  // TODO once the OpenAPI spec is ready, replace with actual API call
+  return ["mapillary"];
 }

@@ -12,13 +12,21 @@ function SegmentationCard({ segmentation }: { segmentation: Segmentation }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-base">{segmentation.model_name}</CardTitle>
+        <CardTitle className="text-base">{segmentation.name}</CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-2">
-        {segmentation.run_args && (
-          <div className="text-sm text-muted-foreground">
-            <span className="font-medium">Args:</span> {segmentation.run_args}
-          </div>
+        <div className="text-sm text-muted-foreground">
+          <span className="font-medium">Model:</span> {segmentation.model}
+        </div>
+        {segmentation.params && (
+          <details>
+            <summary>Parameters</summary>
+            <pre>
+              <code>
+                {JSON.stringify(JSON.parse(segmentation.params), null, 2)}
+              </code>
+            </pre>
+          </details>
         )}
         {segmentation.notes && (
           <div className="text-sm text-muted-foreground">

@@ -8,7 +8,7 @@
     "build": "tsc -b --noCheck && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc -b --noEmit",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
@@ -29,7 +29,7 @@
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-map-gl": "^8.1.0",
-    "react-resizable-panels": "^4.4.1",
+    "react-resizable-panels": "^2.1.9",
     "shadcn": "^3.7.0",
     "tailwind-merge": "^3.4.0",
     "tailwindcss": "^4.1.18",
