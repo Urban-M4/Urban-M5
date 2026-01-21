@@ -72,6 +72,16 @@ const mock_data: StreetscapeImage[] = [
     notes: "Crowded place.",
     segmentations: [],
   },
+  {
+    id: "centraal",
+    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Amsterdam_Centraal_2016-09-13.jpg/500px-Amsterdam_Centraal_2016-09-13.jpg",
+    longitude: 4.898609,
+    latitude: 52.377032,
+    tags: ["amsterdam", "city center", "station"],
+    rating: 1,
+    notes: "",
+    segmentations: [],
+  }
 ] as const;
 
 interface ImagesFilter {
