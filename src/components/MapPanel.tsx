@@ -96,7 +96,6 @@ export function MapPanel() {
           latitude: 52,
           zoom: 8,
         }}
-        className="h-full w-full"
         style={{ width: "100%", height: "100%" }}
         mapStyle={mapStyle}
         onClick={handleClick}

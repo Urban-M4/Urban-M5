@@ -1,3 +1,4 @@
+import { useCallback, useEffect } from "react";
 import { parseAsString, useQueryState } from "nuqs";
 import createFetchClient from "openapi-fetch";
 import createClient from "openapi-react-query";
@@ -81,7 +82,7 @@ const mock_data: StreetscapeImage[] = [
     rating: 1,
     notes: "",
     segmentations: [],
-  }
+  },
 ] as const;
 
 interface ImagesFilter {
@@ -132,6 +133,50 @@ export function useCurrentImageInfo() {
     data: mock_data.find((img) => img.id === imageId),
     isLoading: false,
     error: null,
+  };
+}
+
+export function useImageNavigation() {
+  const { data: images, isLoading } = useGetImages();
+  const [currentImageId, setCurrentImageId] = useCurrentImageId();
+
+  useEffect(() => {
+    if (!images.length) return;
+
+    const exists = images.some((img) => img.id === currentImageId);
+    if (!currentImageId || !exists) {
+      setCurrentImageId(images[0].id);
+    }
+  }, [currentImageId, images, setCurrentImageId]);
+
+  const currentIndex = images.findIndex((img) => img.id === currentImageId);
+  const total = images.length;
+  const filtered = images.length;
+
+  const goToNext = useCallback(() => {
+    if (!images.length) return;
+
+    const index = currentIndex === -1 ? 0 : currentIndex;
+    const nextIndex = (index + 1) % images.length;
+    setCurrentImageId(images[nextIndex].id);
+  }, [currentIndex, images, setCurrentImageId]);
+
+  const goToPrevious = useCallback(() => {
+    if (!images.length) return;
+
+    const index = currentIndex === -1 ? images.length - 1 : currentIndex;
+    const prevIndex = (index - 1 + images.length) % images.length;
+    setCurrentImageId(images[prevIndex].id);
+  }, [currentIndex, images, setCurrentImageId]);
+
+  return {
+    total,
+    filtered,
+    currentIndex,
+    currentImageId,
+    isLoading,
+    goToPrevious,
+    goToNext,
   };
 }
 

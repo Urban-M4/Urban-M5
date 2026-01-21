@@ -1,8 +1,46 @@
 import { ChevronLeft, ChevronRight, Info } from "lucide-react";
+import { useImageNavigation } from "@/hooks/streetscapes";
 import { Button } from "./ui/button";
 import { SidebarTrigger } from "./ui/sidebar";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { ModeToggle } from "./mode-toggle";
+
+function ImageNavigationButtons() {
+  const { total, filtered, currentIndex, goToPrevious, goToNext } =
+    useImageNavigation();
+  return (
+    <nav
+      className="flex-1 flex items-center justify-center gap-1"
+      role="navigation"
+      aria-label="pagination"
+      data-slot="pagination"
+    >
+      <Button
+        variant="outline"
+        size="icon"
+        className="h-8 w-8 bg-transparent"
+        title="Previous image (← or P)"
+        aria-label="Go to previous image"
+        onClick={goToPrevious}
+      >
+        <ChevronLeft className="h-4 w-4" />
+      </Button>
+      <span className="min-w-15 text-center text-sm text-muted-foreground">
+        {currentIndex + 1} / {filtered} (total: {total})
+      </span>
+      <Button
+        variant="outline"
+        size="icon"
+        className="h-8 w-8 bg-transparent"
+        title="Next image (→ or N)"
+        aria-label="Go to next image"
+        onClick={goToNext}
+      >
+        <ChevronRight className="h-4 w-4" />
+      </Button>
+    </nav>
+  );
+}
 
 export function NavBar() {
   return (
@@ -14,27 +52,7 @@ export function NavBar() {
       </div>
 
       {/* Middle: Navigation Buttons */}
-      <div className="flex-1 flex items-center justify-center gap-1">
-        <Button
-          variant="outline"
-          size="icon"
-          className="h-8 w-8 bg-transparent"
-          title="Previous image (← or P)"
-        >
-          <ChevronLeft className="h-4 w-4" />
-        </Button>
-        <span className="min-w-15 text-center text-sm text-muted-foreground">
-          ? / ?
-        </span>
-        <Button
-          variant="outline"
-          size="icon"
-          className="h-8 w-8 bg-transparent"
-          title="Next image (→ or N)"
-        >
-          <ChevronRight className="h-4 w-4" />
-        </Button>
-      </div>
+      <ImageNavigationButtons />
 
       {/* Right: Info Popover */}
       <div>
