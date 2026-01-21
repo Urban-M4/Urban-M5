@@ -103,6 +103,7 @@ export function MapPanel() {
         onMouseMove={onHover}
         interactiveLayerIds={["images"]}
       >
+        {/* TODO add control to zoom to fit all points */}
         <FullscreenControl position="top-left" />
         <NavigationControl position="top-left" />
         <ScaleControl />

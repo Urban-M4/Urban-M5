@@ -23,6 +23,7 @@ pnpm typecheck # run TypeScript type checking
 
 ## Important
 
+- when you make changes to code, make sure to format, lint and typecheck
 - shadcn/ui for components,
   - only put shadcn components in the `src/components/ui/` folder.
   - use lucide icons

@@ -2,17 +2,22 @@ import { parseAsString, useQueryState } from "nuqs";
 import createFetchClient from "openapi-fetch";
 import createClient from "openapi-react-query";
 
+// TODO replace with pnpm dlx openapi-typescript http://localhost:3000/openapi.json -o ./src/components/lib/streetscapes-api.ts
+// mimics https://github.com/BSchilperoort/streetscapes-fastapi/blob/main/main.py
 type Polygon = [number, number][];
 type MultiPolygon = Polygon[];
-type Segment = {
-  id: string;
+export type Instance = {
   label: string;
-  points: MultiPolygon;
-  confidence: number;
-  model: string;
+  polygon: MultiPolygon;
 };
 
-// TODO replace with pnpm dlx openapi-typescript http://localhost:3000/openapi.json -o ./src/components/lib/streetscapes-api.ts
+export interface Segmentation {
+  model_name: string;
+  run_args: string;
+  instances: Instance[];
+  notes: string;
+}
+
 interface StreetscapeImage {
   id: string;
   url: string;
@@ -21,7 +26,7 @@ interface StreetscapeImage {
   tags: string[];
   rating: number;
   notes: string;
-  segments: Segment[];
+  segmentations: Segmentation[];
 }
 const mock_data: StreetscapeImage[] = [
   {
@@ -32,23 +37,24 @@ const mock_data: StreetscapeImage[] = [
     tags: ["amsterdam", "city center"],
     rating: 5,
     notes: "Nice view of the canal.",
-    //     category="bike", confidence=0.5,
-    // x_min=181, x_max=355,
-    // y_min=560, y_max=673,
-    segments: [
+    segmentations: [
       {
-        id: "seg1",
-        label: "bike",
-        confidence: 0.95,
-        model: "model-v1",
-        points: [
-          [
-            [181, 560],
-            [355, 560],
-            [355, 673],
-            [181, 673],
-            [181, 560],
-          ],
+        model_name: "model-v1",
+        run_args: "--threshold 0.5",
+        notes: "Clear sky, good lighting.",
+        instances: [
+          {
+            label: "bike",
+            polygon: [
+              [
+                [181, 560],
+                [355, 560],
+                [355, 673],
+                [181, 673],
+                [181, 560],
+              ],
+            ],
+          },
         ],
       },
     ],
@@ -61,7 +67,7 @@ const mock_data: StreetscapeImage[] = [
     tags: ["amsterdam", "city center"],
     rating: 4,
     notes: "Crowded place.",
-    segments: [],
+    segmentations: [],
   },
 ] as const;
 
@@ -122,4 +128,13 @@ export function useAllTags() {
     isLoading: false,
     error: null,
   };
+}
+
+export function useAllLabels() {
+  const data = {
+    bike: "#ff0000",
+    car: "#00ff00",
+    person: "#0000ff",
+  };
+  return data;
 }

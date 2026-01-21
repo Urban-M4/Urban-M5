@@ -2,6 +2,7 @@ import { useCurrentImageInfo } from "@/hooks/streetscapes";
 import { Rating } from "@/components/rating";
 import { Tags } from "@/components/Tags";
 import { Notes } from "@/components/Notes";
+import { Segmentations } from "@/components/Segmentations";
 
 export function ImagePanel() {
   const { data: imageInfo, isLoading, error } = useCurrentImageInfo();
@@ -29,7 +30,7 @@ export function ImagePanel() {
       <Tags onChange={() => {}} tags={imageInfo.tags} />
       <Rating value={imageInfo.rating} onChange={() => {}} />
       <Notes value={imageInfo.notes} onChange={() => {}} />
-      {/* <Segments value={imageInfo.segments}/> */}
+      <Segmentations segmentations={imageInfo.segmentations} />
     </div>
   );
 }
