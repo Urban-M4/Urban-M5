@@ -12,7 +12,12 @@ export function App() {
       <form method="get" className="p-4">
         <Label>
           Streetscapes Web Service URL:
-          <Input type="text" name="s" placeholder="http://localhost:3000" required/>
+          <Input
+            type="text"
+            name="s"
+            placeholder="http://localhost:3000"
+            required
+          />
         </Label>
         <Button type="submit">Submit</Button>
       </form>

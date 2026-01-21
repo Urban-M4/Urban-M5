@@ -42,7 +42,7 @@ export function MapPanel() {
   }
 
   return (
-    <div className="grow w-4xl relative overflow-hidden">
+    <div className="flex-1 relative overflow-hidden">
       <Map
         ref={mapRef}
         initialViewState={{
@@ -51,7 +51,7 @@ export function MapPanel() {
           zoom: 8,
         }}
         style={{ width: "100%", height: "100%" }}
-        mapStyle="https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
+        mapStyle="https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
         onClick={handleClick}
       >
         <Source id="images" type="geojson" data={geojson}>
