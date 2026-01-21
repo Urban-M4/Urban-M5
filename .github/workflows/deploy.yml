@@ -3,7 +3,7 @@ name: Build and Deploy to GitHub Pages
 on:
   push:
     branches:
-      - vite-react # TODO on merge change to main
+      - main
   workflow_dispatch:
 
 permissions:
