@@ -84,7 +84,7 @@ function SidebarProvider({
       // eslint-disable-next-line react-compiler/react-compiler
       document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
     },
-    [setOpenProp, open,],
+    [setOpenProp, open],
   );
 
   // Helper to toggle the sidebar.
