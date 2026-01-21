@@ -23,6 +23,7 @@ import {
   SidebarGroupLabel,
   SidebarGroupContent,
 } from "./ui/sidebar";
+import { SegmentImages } from "./SegmentImages";
 
 interface Filters {
   sources: string[];
@@ -224,6 +225,9 @@ export function FilterPanel() {
       <SidebarContent className="p-2">
         <Filters />
       </SidebarContent>
+      <SidebarFooter>
+        <SegmentImages />
+      </SidebarFooter>
       <SidebarFooter />
     </Sidebar>
   );

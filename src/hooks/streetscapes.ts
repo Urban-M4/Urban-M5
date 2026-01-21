@@ -85,14 +85,6 @@ const mock_data: StreetscapeImage[] = [
   },
 ] as const;
 
-interface ImagesFilter {
-  sources: string[];
-  tags: string[];
-  max_captured_at?: Date;
-  min_captured_at?: Date;
-  labels: string[];
-}
-
 export function useStreetscapes() {
   const [streetscapesWebServiceUrl] = useQueryState(
     "s",
@@ -105,7 +97,8 @@ export function useStreetscapes() {
   return $api;
 }
 
-export function useGetImages(filter: ImagesFilter | undefined = undefined) {
+export function useImages() {
+  // TODO construct filter based on search params
   // TODO once the OpenAPI spec is ready, replace with actual API call
   // const $api = useStreetscapes();
   // return $api.useQuery("get", "/images", {
@@ -115,7 +108,7 @@ export function useGetImages(filter: ImagesFilter | undefined = undefined) {
   // })
   return {
     data: mock_data,
-    filter,
+    total: mock_data.length,
     isLoading: false,
     error: null,
   };
@@ -137,7 +130,7 @@ export function useCurrentImageInfo() {
 }
 
 export function useImageNavigation() {
-  const { data: images, isLoading } = useGetImages();
+  const { data: images, total, isLoading } = useImages();
   const [currentImageId, setCurrentImageId] = useCurrentImageId();
 
   useEffect(() => {
@@ -150,7 +143,6 @@ export function useImageNavigation() {
   }, [currentImageId, images, setCurrentImageId]);
 
   const currentIndex = images.findIndex((img) => img.id === currentImageId);
-  const total = images.length;
   const filtered = images.length;
 
   const goToNext = useCallback(() => {
@@ -204,4 +196,8 @@ export function useAllLabels() {
 export function useAllSources() {
   // TODO once the OpenAPI spec is ready, replace with actual API call
   return ["mapillary"];
+}
+
+export function useAllModels() {
+  return ["DinoSAM", "maskformer", "bfms"];
 }

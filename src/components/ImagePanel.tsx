@@ -33,7 +33,10 @@ export function ImagePanel() {
       <Tags onChange={() => {}} tags={imageInfo.tags} />
       <Rating value={imageInfo.rating} onChange={() => {}} />
       <Notes value={imageInfo.notes} onChange={() => {}} />
-      <Segmentations segmentations={imageInfo.segmentations} />
+      <Segmentations
+        imageId={imageInfo.id}
+        segmentations={imageInfo.segmentations}
+      />
     </div>
   );
 }

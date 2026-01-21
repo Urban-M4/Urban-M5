@@ -4,6 +4,7 @@ import { NuqsAdapter } from "nuqs/adapters/react";
 import "./index.css";
 import Wrapper from "./Wrapper.tsx";
 import { ThemeProvider } from "./components/theme-provider.tsx";
+import { Toaster } from "@/components/ui/sonner"
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -12,5 +13,6 @@ createRoot(document.getElementById("root")!).render(
         <Wrapper />
       </ThemeProvider>
     </NuqsAdapter>
+    <Toaster/>
   </StrictMode>,
 );

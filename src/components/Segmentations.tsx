@@ -2,8 +2,10 @@ import type { Segmentation } from "@/hooks/streetscapes";
 import { useAllLabels } from "@/hooks/streetscapes";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { SegmentImage } from "@/components/SegmentImage";
 
 interface SegmentationsProps {
+  imageId: string;
   segmentations: Segmentation[];
 }
 
@@ -63,11 +65,20 @@ function SegmentationCard({ segmentation }: { segmentation: Segmentation }) {
   );
 }
 
-export function Segmentations({ segmentations }: SegmentationsProps) {
+export function Segmentations({ imageId, segmentations }: SegmentationsProps) {
+  const header = (
+    <div className="flex items-center justify-between gap-3">
+      <span className="text-sm font-medium">Segmentations:</span>
+      <div className="flex items-center gap-2">
+        <SegmentImage imageId={imageId} />
+      </div>
+    </div>
+  );
+
   if (segmentations.length === 0) {
     return (
-      <div className="flex items-center gap-2">
-        <span className="text-sm font-medium">Segmentations:</span>
+      <div className="flex flex-col gap-2">
+        {header}
         <span className="text-sm text-muted-foreground">
           No segmentations available
         </span>
@@ -77,7 +88,7 @@ export function Segmentations({ segmentations }: SegmentationsProps) {
 
   return (
     <div className="flex flex-col gap-3">
-      <span className="text-sm font-medium">Segmentations:</span>
+      {header}
       <div className="flex flex-col gap-3">
         {segmentations.map((segmentation, index) => (
           <SegmentationCard key={index} segmentation={segmentation} />

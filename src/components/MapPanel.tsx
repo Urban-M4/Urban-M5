@@ -10,7 +10,7 @@ import Map, {
 } from "react-map-gl/maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
 
-import { useCurrentImageId, useGetImages } from "@/hooks/streetscapes";
+import { useCurrentImageId, useImages } from "@/hooks/streetscapes";
 import { useTheme } from "@/components/theme-provider";
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -18,7 +18,7 @@ export function MapPanel() {
   const [currentImageId, setCurrentImageId] = useCurrentImageId();
   const { theme } = useTheme();
   const mapRef = useRef<MapRef | null>(null);
-  const { data: images } = useGetImages();
+  const { data: images } = useImages();
   const [hoverInfo, setHoverInfo] = useState<{
     feature: MapGeoJSONFeature;
     x: number;
