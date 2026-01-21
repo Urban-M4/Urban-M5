@@ -92,7 +92,7 @@ export function useGetImages(filter: ImagesFilter | undefined = undefined) {
   //         // TODO filter parameters
   //     }
   // })
-
+  console.log("Filtering images with", filter);
   return {
     data: mock_data,
     isLoading: false,

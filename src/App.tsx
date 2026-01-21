@@ -1,29 +1,25 @@
-import { parseAsString, useQueryState } from "nuqs";
-import { UrbanM5App } from "./components/UrbanM5App";
-import { Input } from "@/components/ui/input";
-import { Button } from "./components/ui/button";
-import { Label } from "./components/ui/label";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { FilterPanel } from "./components/FilterPanel";
+import { ImagePanel } from "./components/ImagePanel";
+import { MapPanel } from "./components/MapPanel";
+import { NavBar } from "./components/NavBar";
+import { SidebarProvider } from "./components/ui/sidebar";
+
+const queryClient = new QueryClient();
 
 export function App() {
-  const [streetscapesWebServiceUrl] = useQueryState("s", parseAsString);
-
-  if (streetscapesWebServiceUrl === null) {
-    return (
-      <form method="get" className="p-4">
-        <Label>
-          Streetscapes Web Service URL:
-          <Input
-            type="text"
-            name="s"
-            placeholder="http://localhost:3000"
-            required
-          />
-        </Label>
-        <Button type="submit">Submit</Button>
-      </form>
-    );
-  }
-
-  return <UrbanM5App />;
+  return (
+    <QueryClientProvider client={queryClient}>
+      <SidebarProvider>
+        <FilterPanel />
+        <main className="flex flex-col h-screen w-full overflow-hidden">
+          <NavBar />
+          <div className="flex flex-row flex-1 w-full gap-4 overflow-hidden">
+            <MapPanel />
+            <ImagePanel />
+          </div>
+        </main>
+      </SidebarProvider>
+    </QueryClientProvider>
+  );
 }
-export default App;
