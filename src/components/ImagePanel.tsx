@@ -6,7 +6,7 @@ import { Notes } from "@/components/Notes";
 export function ImagePanel() {
   const { data: imageInfo, isLoading, error } = useCurrentImageInfo();
 
-  if (imageInfo === null) {
+  if (imageInfo === undefined) {
     return <div className="flex-1">No image selected</div>;
   }
 

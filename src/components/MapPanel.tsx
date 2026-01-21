@@ -8,7 +8,7 @@ import "maplibre-gl/dist/maplibre-gl.css";
 
 import { useCurrentImageId, useGetImages } from "@/hooks/streetscapes";
 import { useTheme } from "@/components/theme-provider";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 
 export function MapPanel() {
   const [currentImageId, setCurrentImageId] = useCurrentImageId();
@@ -21,11 +21,16 @@ export function MapPanel() {
       ? "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
       : "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json";
 
+  // MapLibre forces id to number, while image id are strings
+  const imageLookup: Record<string, number> = Object.fromEntries(
+    images.map((img, index) => [img.id, index]),
+  );
+
   const geojson = {
     type: "FeatureCollection" as const,
     features: images?.map((img) => ({
       type: "Feature" as const,
-      id: img.id,
+      id: imageLookup[img.id],
       properties: {
         id: img.id,
       },
@@ -35,6 +40,17 @@ export function MapPanel() {
       },
     })),
   };
+
+  useEffect(() => {
+    if (!mapRef.current) return;
+
+    images.forEach((image) => {
+      mapRef.current?.setFeatureState(
+        { source: "images", id: imageLookup[image.id] },
+        { selected: image.id === currentImageId },
+      );
+    });
+  }, [currentImageId, images, imageLookup]);
 
   function handleClick(event: MapLayerMouseEvent) {
     if (!mapRef.current) return;
@@ -66,7 +82,17 @@ export function MapPanel() {
           <Layer
             id="images"
             type="circle"
-            paint={{ "circle-radius": 10, "circle-color": "#007cbf" }}
+            paint={{
+              "circle-radius": 8,
+              "circle-color": [
+                "case",
+                ["boolean", ["feature-state", "selected"], false],
+                "#007cbf",
+                "rgba(0,0,0,0)",
+              ],
+              "circle-stroke-width": 8,
+              "circle-stroke-color": "#007cbf",
+            }}
           />
         </Source>
       </Map>

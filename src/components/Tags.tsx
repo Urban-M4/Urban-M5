@@ -15,6 +15,7 @@ import {
   ComboboxValue,
   useComboboxAnchor,
 } from "@/components/ui/combobox";
+import { useAllTags } from "@/hooks/streetscapes";
 
 interface TagsProps {
   tags: string[];
@@ -26,10 +27,7 @@ export function Tags({ tags, onChange }: TagsProps) {
   const [inputValue, setInputValue] = React.useState("");
   const [isEditing, setIsEditing] = React.useState(false);
 
-  const allTags = React.useMemo(() => {
-    const uniqueTags = new Set([...tags, inputValue.trim()].filter(Boolean));
-    return Array.from(uniqueTags);
-  }, [tags, inputValue]);
+  const { data: allTags } = useAllTags();
 
   const handleAddCustomTag = (value: string) => {
     const trimmedValue = value.trim();

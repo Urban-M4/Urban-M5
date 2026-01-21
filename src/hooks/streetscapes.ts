@@ -109,7 +109,16 @@ export function useCurrentImageInfo() {
   // TODO use client
 
   return {
-    data: mock_data.find((img) => img.id === imageId) || null,
+    data: mock_data.find((img) => img.id === imageId),
+    isLoading: false,
+    error: null,
+  };
+}
+
+export function useAllTags() {
+  const data = Array.from(new Set(mock_data.flatMap((img) => img.tags)));
+  return {
+    data,
     isLoading: false,
     error: null,
   };
