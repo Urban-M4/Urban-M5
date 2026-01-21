@@ -3,6 +3,11 @@ import { FilterPanel } from "./components/FilterPanel";
 import { ImagePanel } from "./components/ImagePanel";
 import { MapPanel } from "./components/MapPanel";
 import { NavBar } from "./components/NavBar";
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "./components/ui/resizable";
 import { SidebarProvider } from "./components/ui/sidebar";
 
 const queryClient = new QueryClient();
@@ -14,10 +19,30 @@ export function App() {
         <FilterPanel />
         <main className="flex flex-col h-screen w-full overflow-hidden">
           <NavBar />
-          <div className="flex flex-row flex-1 w-full gap-4 overflow-hidden">
-            <MapPanel />
-            <ImagePanel />
-          </div>
+          <ResizablePanelGroup
+            direction="horizontal"
+            className="flex-1 w-full min-h-0 overflow-hidden"
+          >
+            <ResizablePanel
+              defaultSize={50}
+              minSize={20}
+              className="min-w-0 h-full"
+            >
+              <div className="h-full w-full overflow-hidden">
+                <MapPanel />
+              </div>
+            </ResizablePanel>
+            <ResizableHandle withHandle className="mx-2" />
+            <ResizablePanel
+              defaultSize={50}
+              minSize={20}
+              className="min-w-0 h-full"
+            >
+              <div className="h-full w-full overflow-hidden">
+                <ImagePanel />
+              </div>
+            </ResizablePanel>
+          </ResizablePanelGroup>
         </main>
       </SidebarProvider>
     </QueryClientProvider>

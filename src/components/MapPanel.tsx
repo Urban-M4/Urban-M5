@@ -88,7 +88,7 @@ export function MapPanel() {
 
   // TODO use clustering see https://visgl.github.io/react-map-gl/examples/maplibre/clusters
   return (
-    <div className="flex-1 relative overflow-hidden">
+    <div className="relative overflow-hidden h-full w-full">
       <Map
         ref={mapRef}
         initialViewState={{
@@ -96,6 +96,7 @@ export function MapPanel() {
           latitude: 52,
           zoom: 8,
         }}
+        className="h-full w-full"
         style={{ width: "100%", height: "100%" }}
         mapStyle={mapStyle}
         onClick={handleClick}
