@@ -7,12 +7,20 @@ import Map, {
 import "maplibre-gl/dist/maplibre-gl.css";
 
 import { useCurrentImageId, useGetImages } from "@/hooks/streetscapes";
+import { useTheme } from "@/components/theme-provider";
 import { useRef } from "react";
 
 export function MapPanel() {
   const [currentImageId, setCurrentImageId] = useCurrentImageId();
+  const { theme } = useTheme();
   const mapRef = useRef<MapRef | null>(null);
   const { data: images } = useGetImages();
+
+  const mapStyle =
+    theme === "dark"
+      ? "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
+      : "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json";
+
   const geojson = {
     type: "FeatureCollection" as const,
     features: images?.map((img) => ({
@@ -51,7 +59,7 @@ export function MapPanel() {
           zoom: 8,
         }}
         style={{ width: "100%", height: "100%" }}
-        mapStyle="https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
+        mapStyle={mapStyle}
         onClick={handleClick}
       >
         <Source id="images" type="geojson" data={geojson}>
