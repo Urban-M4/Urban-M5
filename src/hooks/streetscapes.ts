@@ -39,11 +39,17 @@ export function useGetImages(filter: ImagesFilter | undefined = undefined) {
   // })
   const mock_data: StreetscapeImage[] = [
     {
-      id: "1",
-      url: "http://example.com/image1.jpg",
+      id: "183375246977980",
+      url: "https://github.com/Urban-M4/Urban-M5/blob/gradio/data/183375246977980.jpg?raw=true",
       longitude: 4.9009338,
       latitude: 52.37294,
     },
+    {
+      id: "dam",
+      url: "https://github.com/Urban-M4/Urban-M5/blob/gradio/data/dam.jpg?raw=true",
+      longitude: 4.893212,
+      latitude: 52.372936,
+    }
   ];
   return {
     data: mock_data,
