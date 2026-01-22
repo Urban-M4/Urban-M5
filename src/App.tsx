@@ -38,7 +38,7 @@ export function App() {
               minSize={20}
               className="min-w-0 h-full"
             >
-              <div className="h-full w-full overflow-hidden">
+              <div className="h-full w-full overflow-auto">
                 <ImagePanel />
               </div>
             </ResizablePanel>
