@@ -1,4 +1,9 @@
-import { useAllTags, useAllLabels, useAllSources } from "../hooks/streetscapes";
+import {
+  useAllTags,
+  useAllLabels,
+  useAllSources,
+  useAllModels,
+} from "../hooks/streetscapes";
 import { Label } from "./ui/label";
 import {
   Combobox,
@@ -25,20 +30,13 @@ import {
 import { SegmentImages } from "./SegmentImages";
 import { useFilters } from "@/hooks/filters";
 
-interface Filters {
-  sources: string[];
-  tags: string[];
-  max_captured_at: string | undefined;
-  min_captured_at: string | undefined;
-  labels: string[];
-}
-
 export function Filters() {
   const [filters, setFilters] = useFilters();
 
   const sources = useAllSources();
   const { data: tags } = useAllTags();
   const labels = useAllLabels();
+  const models = useAllModels();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -56,6 +54,7 @@ export function Filters() {
       max_captured_at: null,
       min_captured_at: null,
       labels: [],
+      models: [],
     });
   };
 
@@ -63,6 +62,7 @@ export function Filters() {
     filters.sources.length > 0 ||
     filters.tags.length > 0 ||
     filters.labels.length > 0 ||
+    filters.models.length > 0 ||
     filters.max_captured_at ||
     filters.min_captured_at;
 
@@ -121,6 +121,38 @@ export function Filters() {
             </ComboboxChips>
             <ComboboxContent>
               <ComboboxEmpty>No tags found.</ComboboxEmpty>
+              <ComboboxList>
+                {(item) => (
+                  <ComboboxItem key={item} value={item}>
+                    {item}
+                  </ComboboxItem>
+                )}
+              </ComboboxList>
+            </ComboboxContent>
+          </Combobox>
+        </SidebarGroupContent>
+      </SidebarGroup>
+      <SidebarGroup>
+        <SidebarGroupLabel>Models</SidebarGroupLabel>
+        <SidebarGroupContent>
+          <Combobox
+            items={models}
+            multiple
+            value={filters.models}
+            onValueChange={(value) =>
+              handleMultiSelectChange("models", value as string[])
+            }
+          >
+            <ComboboxChips>
+              <ComboboxValue>
+                {filters.models.map((item) => (
+                  <ComboboxChip key={item}>{item}</ComboboxChip>
+                ))}
+              </ComboboxValue>
+              <ComboboxChipsInput placeholder="Select models..." />
+            </ComboboxChips>
+            <ComboboxContent>
+              <ComboboxEmpty>No models found.</ComboboxEmpty>
               <ComboboxList>
                 {(item) => (
                   <ComboboxItem key={item} value={item}>

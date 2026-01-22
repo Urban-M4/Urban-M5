@@ -8,6 +8,7 @@ export function useFilters() {
       max_captured_at: parseAsString,
       min_captured_at: parseAsString,
       labels: parseAsArrayOf(parseAsString).withDefault([]),
+      models: parseAsArrayOf(parseAsString).withDefault([]),
     },
     {
       urlKeys: {
@@ -16,6 +17,7 @@ export function useFilters() {
         max_captured_at: "maxc",
         min_captured_at: "minc",
         labels: "l",
+        models: "m",
       },
     },
   );
