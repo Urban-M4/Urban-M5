@@ -30,16 +30,16 @@ function mapSegmentationsToAnnotations(
   segmentations: Segmentation[],
 ): ImageAnnotation[] {
   return segmentations.flatMap((segmentation, segmentationIndex) =>
-    segmentation.instances.map((instance, instanceIndex) => {
+    (segmentation.instances ?? []).map((instance, instanceIndex) => {
       const id = [
         "seg",
-        segmentation.name,
+        segmentation.id,
         segmentationIndex,
         instance.label,
         instanceIndex,
       ].join(":");
 
-      const allPoints = instance.polygon.flat();
+      const allPoints = (instance.polygon ?? []).flat();
       const xs = allPoints.map(([x]) => x);
       const ys = allPoints.map(([, y]) => y);
 
@@ -51,7 +51,7 @@ function mapSegmentationsToAnnotations(
         maxY: Math.max(...ys),
       };
 
-      const polygons = instance.polygon.map((ring) => {
+      const polygons = (instance.polygon ?? []).map((ring) => {
         const ringXs = ring.map(([x]) => x);
         const ringYs = ring.map(([, y]) => y);
 
@@ -140,7 +140,11 @@ function RealAnnotatedImage({
       userSelectAction={UserSelectAction.NONE}
       style={annotaterStyle}
     >
-      <img src={url} alt={`Streetscape ${id}`} className="max-w-full h-auto" />
+      <img
+        src={url}
+        alt={`Streetscape ${id}`}
+        className="max-w-full h-[80vh] object-contain"
+      />
     </ImageAnnotator>
   );
 }

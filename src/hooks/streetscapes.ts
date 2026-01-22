@@ -3,95 +3,25 @@ import { parseAsString, useQueryState, type UseQueryStateReturn } from "nuqs";
 import createFetchClient from "openapi-fetch";
 import createClient from "openapi-react-query";
 import { palette } from "@/lib/label-colors";
+import type { components, paths } from "@/lib/streetscapes-api";
 
-// TODO replace with pnpm dlx openapi-typescript http://localhost:3000/openapi.json -o ./src/components/lib/streetscapes-api.ts
-// mimics https://github.com/BSchilperoort/streetscapes-fastapi/blob/main/main.py
-type Polygon = [number, number][];
-type MultiPolygon = Polygon[];
-export type Instance = {
-  label: string;
-  polygon: MultiPolygon;
-};
+export type Polygon = [number, number][];
+export type MultiPolygon = Polygon[];
 
-export interface Segmentation {
-  model: string;
-  name: string;
-  params: string;
-  instances: Instance[];
-  notes: string;
-}
-
-interface StreetscapeImage {
-  id: string;
-  url: string;
-  latitude: number;
-  longitude: number;
-  tags: string[];
-  rating: number;
-  notes: string;
-  segmentations: Segmentation[];
-}
-const mock_data: StreetscapeImage[] = [
-  {
-    id: "183375246977980",
-    url: "https://github.com/Urban-M4/Urban-M5/blob/gradio/data/183375246977980.jpg?raw=true",
-    longitude: 4.9009338,
-    latitude: 52.37294,
-    tags: ["amsterdam", "city center"],
-    rating: 5,
-    notes: "Nice view of the canal.",
-    segmentations: [
-      {
-        model: "DinoSAM",
-        name: "my run 1",
-        params:
-          '{"sky": null, "building": {"window": null, "door": null}, "tree": null, "car": null, "truck": null, "road": null}',
-        notes: "Clear sky, good lighting.",
-        instances: [
-          {
-            label: "bike",
-            polygon: [
-              [
-                [181, 560],
-                [355, 560],
-                [355, 673],
-                [181, 673],
-                [181, 560],
-              ],
-            ],
-          },
-        ],
-      },
-    ],
-  },
-  {
-    id: "dam",
-    url: "https://github.com/Urban-M4/Urban-M5/blob/gradio/data/dam.jpg?raw=true",
-    longitude: 4.893212,
-    latitude: 52.372936,
-    tags: ["amsterdam", "city center"],
-    rating: 4,
-    notes: "Crowded place.",
-    segmentations: [],
-  },
-  {
-    id: "centraal",
-    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Amsterdam_Centraal_2016-09-13.jpg/500px-Amsterdam_Centraal_2016-09-13.jpg",
-    longitude: 4.898609,
-    latitude: 52.377032,
-    tags: ["amsterdam", "city center", "station"],
-    rating: 1,
-    notes: "",
-    segmentations: [],
-  },
-] as const;
+export type Image =
+  paths["/images"]["post"]["responses"]["200"]["content"]["application/json"];
+export type ImageMetadata =
+  paths["/images/{image_id}"]["get"]["responses"]["200"]["content"]["application/json"];
+export type Segmentation = components["schemas"]["Segmentation"];
+export type Instance = components["schemas"]["Instance"];
+export type AggregateStats = components["schemas"]["AggregateStats"];
 
 export function useStreetscapes() {
   const [streetscapesWebServiceUrl] = useQueryState(
     "s",
     parseAsString.withDefault("http://localhost:3000"),
   );
-  const fetchClient = createFetchClient({
+  const fetchClient = createFetchClient<paths>({
     baseUrl: streetscapesWebServiceUrl,
   });
   const $api = createClient(fetchClient);
@@ -101,56 +31,38 @@ export function useStreetscapes() {
 export function useImages() {
   // TODO construct filter based on search params
   // TODO once the OpenAPI spec is ready, replace with actual API call
-  // const $api = useStreetscapes();
-  // return $api.useQuery("get", "/images", {
-  //     params: {
-  //         // TODO filter parameters
-  //     }
-  // })
-  return {
-    data: mock_data,
-    total: mock_data.length,
-    isLoading: false,
-    error: null,
-  };
+  const $api = useStreetscapes();
+  return $api.useQuery("post", "/images", {
+    placeholderData: [],
+  });
 }
 
 export function useCurrentImageId(): UseQueryStateReturn<string, undefined> {
   const [imageId, setImageId] = useQueryState("i", parseAsString);
-
-  const { data } = useImages();
-
-  useEffect(() => {
-    if (!data || data.length === 0) return;
-    const exists = data.some((img) => img.id === imageId);
-    if (!imageId || !exists) {
-      setImageId(data[0].id);
-    }
-  }, [imageId, data, setImageId]);
-
   return [imageId, setImageId];
 }
 
 export function useCurrentImageInfo() {
   const [imageId] = useCurrentImageId();
-  // TODO use client
 
-  return {
-    data: mock_data.find((img) => img.id === imageId),
-    isLoading: false,
-    error: null,
-  };
+  const $api = useStreetscapes();
+  return $api.useQuery("get", "/images/{image_id}", {
+    params: {
+      path: { image_id: imageId! },
+    },
+    enabled: imageId !== null,
+  });
 }
 
 export function useImageNavigation() {
-  const { data: images, total, isLoading } = useImages();
+  const { data: images = [], isLoading } = useImages();
   const [currentImageId, setCurrentImageId] = useCurrentImageId();
 
   useEffect(() => {
-    if (!images.length) return;
+    if (!images) return;
 
     const exists = images.some((img) => img.id === currentImageId);
-    if (!currentImageId || !exists) {
+    if ((!currentImageId || !exists) && images.length > 0) {
       setCurrentImageId(images[0].id);
     }
   }, [currentImageId, images, setCurrentImageId]);
@@ -175,7 +87,7 @@ export function useImageNavigation() {
   }, [currentIndex, images, setCurrentImageId]);
 
   return {
-    total,
+    total: images.length,
     filtered,
     currentIndex,
     currentImageId,
@@ -185,29 +97,37 @@ export function useImageNavigation() {
   };
 }
 
+const placeholderStats: AggregateStats = {
+  tags: [],
+  labels: [],
+  model_run_names: [],
+  image_sources: [],
+  date_range: ["1970-01-01", "2100-12-31"],
+};
+
+export function useAggregateStats() {
+  const $api = useStreetscapes();
+  return $api.useQuery("get", "/stats", {
+    placeholderData: placeholderStats,
+  });
+}
+
 export function useAllTags() {
-  // TODO once the OpenAPI spec is ready, replace with actual API call
-  const data = Array.from(new Set(mock_data.flatMap((img) => img.tags)));
-  return {
-    data,
-    isLoading: false,
-    error: null,
-  };
+  const { data = placeholderStats } = useAggregateStats();
+  return data.tags;
 }
 
 export function useAllLabels() {
-  // TODO once the OpenAPI spec is ready, replace with actual API call
-  const labels = ["bike", "car", "person"];
-
-  const data = Object.fromEntries(
+  const { data = placeholderStats } = useAggregateStats();
+  const labels = data.labels;
+  return Object.fromEntries(
     labels.map((l, i) => [l, palette[i % palette.length]]),
   );
-  return data;
 }
 
 export function useAllSources() {
-  // TODO once the OpenAPI spec is ready, replace with actual API call
-  return ["mapillary"];
+  const { data = placeholderStats } = useAggregateStats();
+  return data.image_sources;
 }
 
 export function useAllModels() {

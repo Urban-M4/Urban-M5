@@ -5,7 +5,8 @@ import { WandSparkles } from "lucide-react";
 import { toast } from "sonner";
 
 export function SegmentImages() {
-  const { total } = useImages();
+  const { data = [] } = useImages();
+  const total = data.length;
 
   function onSubmit(formData: FormData) {
     // TODO call streetscapes API to start segmentation job

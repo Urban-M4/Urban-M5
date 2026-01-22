@@ -28,14 +28,14 @@ export function ImagePanel() {
       <AnnotatedImage
         id={imageInfo.id}
         url={imageInfo.url}
-        segmentations={imageInfo.segmentations}
+        segmentations={imageInfo.segmentation ?? []}
       />
-      <Tags onChange={() => {}} tags={imageInfo.tags} />
+      <Tags onChange={() => {}} tags={imageInfo.tags ?? []} />
       <Rating value={imageInfo.rating} onChange={() => {}} />
       <Notes value={imageInfo.notes} onChange={() => {}} />
       <Segmentations
         imageId={imageInfo.id}
-        segmentations={imageInfo.segmentations}
+        segmentations={imageInfo.segmentation ?? []}
       />
     </div>
   );

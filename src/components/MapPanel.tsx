@@ -18,7 +18,7 @@ export function MapPanel() {
   const [currentImageId, setCurrentImageId] = useCurrentImageId();
   const { theme } = useTheme();
   const mapRef = useRef<MapRef | null>(null);
-  const { data: images } = useImages();
+  const { data: images = [] } = useImages();
   const [hoverInfo, setHoverInfo] = useState<{
     feature: MapGeoJSONFeature;
     x: number;
@@ -46,13 +46,14 @@ export function MapPanel() {
       },
       geometry: {
         type: "Point" as const,
-        coordinates: [img.longitude, img.latitude],
+        coordinates: [img.lon, img.lat],
       },
     })),
   };
 
   useEffect(() => {
     if (!mapRef.current) return;
+    if (!mapRef.current.isStyleLoaded()) return;
 
     images.forEach((image) => {
       mapRef.current?.setFeatureState(

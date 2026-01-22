@@ -27,7 +27,7 @@ export function Tags({ tags, onChange }: TagsProps) {
   const [inputValue, setInputValue] = React.useState("");
   const [isEditing, setIsEditing] = React.useState(false);
 
-  const { data: allTags } = useAllTags();
+  const allTags = useAllTags();
 
   const handleAddCustomTag = (value: string) => {
     const trimmedValue = value.trim();

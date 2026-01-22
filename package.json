@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "typecheck": "tsc -b --noEmit",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "api:generate": "openapi-typescript http://localhost:5000/openapi.json -o ./src/lib/streetscapes-api.ts"
   },
   "dependencies": {
     "@annotorious/react": "^3.7.19",

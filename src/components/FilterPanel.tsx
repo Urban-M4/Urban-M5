@@ -34,7 +34,7 @@ export function Filters() {
   const [filters, setFilters] = useFilters();
 
   const sources = useAllSources();
-  const { data: tags } = useAllTags();
+  const tags = useAllTags();
   const labels = useAllLabels();
   const models = useAllModels();
 

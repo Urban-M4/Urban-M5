@@ -14,19 +14,17 @@ function SegmentationCard({ segmentation }: { segmentation: Segmentation }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-base">{segmentation.name}</CardTitle>
+        <CardTitle className="text-base">{segmentation.id}</CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-2">
         <div className="text-sm text-muted-foreground">
-          <span className="font-medium">Model:</span> {segmentation.model}
+          <span className="font-medium">Model:</span> {segmentation.model_name}
         </div>
-        {segmentation.params && (
+        {segmentation.run_args && (
           <details>
             <summary>Parameters</summary>
             <pre>
-              <code>
-                {JSON.stringify(JSON.parse(segmentation.params), null, 2)}
-              </code>
+              <code>{segmentation.run_args}</code>
             </pre>
           </details>
         )}
@@ -35,7 +33,7 @@ function SegmentationCard({ segmentation }: { segmentation: Segmentation }) {
             <span className="font-medium">Notes:</span> {segmentation.notes}
           </div>
         )}
-        {segmentation.instances.length > 0 && (
+        {segmentation.instances && (
           <div className="flex flex-col gap-2">
             <span className="text-sm font-medium">Instances:</span>
             <div className="flex flex-wrap gap-2">

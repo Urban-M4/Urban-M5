@@ -15,7 +15,7 @@ export function Wrapper() {
           <Input
             type="text"
             name="s"
-            placeholder="http://localhost:3000"
+            placeholder="http://localhost:5000"
             required
           />
         </Label>
