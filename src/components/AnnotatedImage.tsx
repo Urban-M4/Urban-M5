@@ -107,11 +107,17 @@ function RealAnnotatedImage({
 }) {
   const allLabel = useAllLabels();
   const annot = useAnnotator();
+
   useEffect(() => {
     if (!annot) return;
 
     const annotations = mapSegmentationsToAnnotations(segmentations);
     annot.setAnnotations(annotations);
+
+    return () => {
+      // Cleanup when image changes
+      annot.setAnnotations([]);
+    };
   }, [annot, segmentations]);
 
   const annotaterStyle = (

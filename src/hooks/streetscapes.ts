@@ -1,9 +1,10 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { parseAsString, useQueryState, type UseQueryStateReturn } from "nuqs";
 import createFetchClient from "openapi-fetch";
 import createClient from "openapi-react-query";
 import { palette } from "@/lib/label-colors";
 import type { components, paths } from "@/lib/streetscapes-api";
+import { useQuery } from "@tanstack/react-query";
 
 export type Polygon = [number, number][];
 export type MultiPolygon = Polygon[];
@@ -44,14 +45,23 @@ export function useCurrentImageId(): UseQueryStateReturn<string, undefined> {
 
 export function useCurrentImageInfo() {
   const [imageId] = useCurrentImageId();
-
   const $api = useStreetscapes();
-  return $api.useQuery("get", "/images/{image_id}", {
-    params: {
-      path: { image_id: imageId! },
+
+  return $api.useQuery(
+    "get",
+    "/images/{image_id}",
+    {
+      params: {
+        path: { image_id: imageId! },
+      },
     },
-    enabled: imageId !== null,
-  });
+    {
+      enabled: imageId !== null,
+      // annotorious does not like while fetching no data
+      // so we keep previous data while loading
+      placeholderData: (prev) => prev,
+    },
+  );
 }
 
 export function useImageNavigation() {
