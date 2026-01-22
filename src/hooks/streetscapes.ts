@@ -2,6 +2,7 @@ import { useCallback, useEffect } from "react";
 import { parseAsString, useQueryState, type UseQueryStateReturn } from "nuqs";
 import createFetchClient from "openapi-fetch";
 import createClient from "openapi-react-query";
+import { palette } from "@/lib/label-colors";
 
 // TODO replace with pnpm dlx openapi-typescript http://localhost:3000/openapi.json -o ./src/components/lib/streetscapes-api.ts
 // mimics https://github.com/BSchilperoort/streetscapes-fastapi/blob/main/main.py
@@ -196,12 +197,11 @@ export function useAllTags() {
 
 export function useAllLabels() {
   // TODO once the OpenAPI spec is ready, replace with actual API call
+  const labels = ["bike", "car", "person"];
 
-  const data: Record<string, string> = {
-    bike: "#ff0000",
-    car: "#00ff00",
-    person: "#0000ff",
-  };
+  const data = Object.fromEntries(
+    labels.map((l, i) => [l, palette[i % palette.length]]),
+  );
   return data;
 }
 
