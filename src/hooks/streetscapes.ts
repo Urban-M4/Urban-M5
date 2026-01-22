@@ -1,5 +1,5 @@
 import { useCallback, useEffect } from "react";
-import { parseAsString, useQueryState } from "nuqs";
+import { parseAsString, useQueryState, type UseQueryStateReturn } from "nuqs";
 import createFetchClient from "openapi-fetch";
 import createClient from "openapi-react-query";
 
@@ -114,8 +114,20 @@ export function useImages() {
   };
 }
 
-export function useCurrentImageId() {
-  return useQueryState("i", parseAsString);
+export function useCurrentImageId(): UseQueryStateReturn<string, undefined> {
+  const [imageId, setImageId] = useQueryState("i", parseAsString);
+
+  const { data } = useImages();
+
+  useEffect(() => {
+    if (!data || data.length === 0) return;
+    const exists = data.some((img) => img.id === imageId);
+    if (!imageId || !exists) {
+      setImageId(data[0].id);
+    }
+  }, [imageId, data, setImageId]);
+
+  return [imageId, setImageId];
 }
 
 export function useCurrentImageInfo() {

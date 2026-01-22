@@ -1,7 +1,7 @@
 import { SegmentJobDialog } from "@/components/SegmentJobDialog";
 import { Button } from "@/components/ui/button";
 import { WandSparkles } from "lucide-react";
-import { toast } from "sonner"
+import { toast } from "sonner";
 
 interface SegmentImageProps {
   imageId: string;
@@ -21,9 +21,9 @@ export function SegmentImage({ imageId }: SegmentImageProps) {
       }),
       {
         loading: `Processing image ${imageId}...`,
-        success: (message: string ) => `${message} successfully segmented`,
+        success: (message: string) => `${message} successfully segmented`,
         error: "Failed to segment image",
-      }
+      },
     );
   }
 

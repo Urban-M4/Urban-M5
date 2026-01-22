@@ -2,7 +2,7 @@ import { SegmentJobDialog } from "@/components/SegmentJobDialog";
 import { useImages } from "@/hooks/streetscapes";
 import { Button } from "@/components/ui/button";
 import { WandSparkles } from "lucide-react";
-import { toast } from "sonner"
+import { toast } from "sonner";
 
 export function SegmentImages() {
   const { total } = useImages();

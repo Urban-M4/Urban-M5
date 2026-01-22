@@ -1,4 +1,3 @@
-import { parseAsArrayOf, parseAsString, useQueryStates } from "nuqs";
 import { useAllTags, useAllLabels, useAllSources } from "../hooks/streetscapes";
 import { Label } from "./ui/label";
 import {
@@ -24,6 +23,7 @@ import {
   SidebarGroupContent,
 } from "./ui/sidebar";
 import { SegmentImages } from "./SegmentImages";
+import { useFilters } from "@/hooks/filters";
 
 interface Filters {
   sources: string[];
@@ -34,18 +34,7 @@ interface Filters {
 }
 
 export function Filters() {
-  const [filters, setFilters] = useQueryStates(
-    {
-      sources: parseAsArrayOf(parseAsString).withDefault([]),
-      tags: parseAsArrayOf(parseAsString).withDefault([]),
-      max_captured_at: parseAsString,
-      min_captured_at: parseAsString,
-      labels: parseAsArrayOf(parseAsString).withDefault([]),
-    },
-    {
-      shallow: false,
-    },
-  );
+  const [filters, setFilters] = useFilters();
 
   const sources = useAllSources();
   const { data: tags } = useAllTags();
