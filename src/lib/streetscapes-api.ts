@@ -71,13 +71,13 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get?: never;
-    put?: never;
     /**
      * Fetch Images
      * @description Fetch streetscape images corresponding to a bounding box and optionally filters.
      */
-    post: operations["fetch_images_images_post"];
+    get: operations["fetch_images_images_get"];
+    put?: never;
+    post?: never;
     delete?: never;
     options?: never;
     head?: never;
@@ -223,25 +223,6 @@ export interface components {
       /** Models */
       models: string[];
     };
-    /** Bbox */
-    Bbox: {
-      /** N */
-      n: number;
-      /** E */
-      e: number;
-      /** S */
-      s: number;
-      /** W */
-      w: number;
-    };
-    /** Body_fetch_images_images_post */
-    Body_fetch_images_images_post: {
-      bbox?: components["schemas"]["Bbox"] | null;
-      /** Filters */
-      filters?: {
-        [key: string]: unknown;
-      } | null;
-    };
     /** HTTPValidationError */
     HTTPValidationError: {
       /** Detail */
@@ -382,11 +363,7 @@ export interface operations {
       path?: never;
       cookie?: never;
     };
-    requestBody?: {
-      content: {
-        "application/json": components["schemas"]["Bbox"] | null;
-      };
-    };
+    requestBody?: never;
     responses: {
       /** @description Successful Response */
       200: {
@@ -397,29 +374,28 @@ export interface operations {
           "application/json": components["schemas"]["AggregateStats"];
         };
       };
-      /** @description Validation Error */
-      422: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["HTTPValidationError"];
-        };
-      };
     };
   };
-  fetch_images_images_post: {
+  fetch_images_images_get: {
     parameters: {
-      query?: never;
+      query?: {
+        n?: number;
+        e?: number;
+        s?: number;
+        w?: number;
+        ratings?: number[];
+        model_runs?: string[];
+        sources?: string[];
+        tags?: string[];
+        compass_angle?: number[];
+        date_range?: [string, string];
+        panoramic?: number[];
+      };
       header?: never;
       path?: never;
       cookie?: never;
     };
-    requestBody?: {
-      content: {
-        "application/json": components["schemas"]["Body_fetch_images_images_post"];
-      };
-    };
+    requestBody?: never;
     responses: {
       /** @description Successful Response */
       200: {

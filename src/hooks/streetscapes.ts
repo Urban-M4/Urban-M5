@@ -4,17 +4,19 @@ import createFetchClient from "openapi-fetch";
 import createClient from "openapi-react-query";
 import { palette } from "@/lib/label-colors";
 import type { components, paths } from "@/lib/streetscapes-api";
+import { useFilters } from "./filters";
 
 export type Polygon = [number, number][];
 export type MultiPolygon = Polygon[];
 
 export type Image =
-  paths["/images"]["post"]["responses"]["200"]["content"]["application/json"];
+  paths["/images"]["get"]["responses"]["200"]["content"]["application/json"];
 export type ImageMetadata =
   paths["/images/{image_id}"]["get"]["responses"]["200"]["content"]["application/json"];
 export type Segmentation = components["schemas"]["Segmentation"];
 export type Instance = components["schemas"]["Instance"];
 export type AggregateStats = components["schemas"]["AggregateStats"];
+export type ImagesQueryParams = paths["/images"]["get"]["parameters"]["query"];
 
 export function useStreetscapes() {
   const [streetscapesWebServiceUrl] = useQueryState(
@@ -29,10 +31,22 @@ export function useStreetscapes() {
 }
 
 export function useImages() {
+  const [filters] = useFilters();
+  const query: ImagesQueryParams = {
+    sources: filters.sources,
+    tags: filters.tags,
+  };
+  if (filters.max_captured_at && filters.min_captured_at) {
+    query.date_range = [filters.min_captured_at, filters.max_captured_at];
+  }
+
   const $api = useStreetscapes();
   // eslint-disable-next-line react-compiler/react-compiler
-  return $api.useQuery("post", "/images", {
+  return $api.useQuery("get", "/images", {
     placeholderData: [],
+    params: {
+      query,
+    },
   });
 }
 
