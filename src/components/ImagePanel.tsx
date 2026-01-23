@@ -3,8 +3,6 @@ import { Rating } from "@/components/rating";
 import { Tags } from "@/components/Tags";
 import { Notes } from "@/components/Notes";
 import { Segmentations } from "@/components/Segmentations";
-
-import "@annotorious/react/annotorious-react.css";
 import { AnnotatedImage } from "./AnnotatedImage";
 
 export function ImagePanel() {

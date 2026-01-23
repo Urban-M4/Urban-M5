@@ -1,4 +1,8 @@
-import { type Segmentation, useAllLabels } from "@/hooks/streetscapes";
+import {
+  type Instance,
+  type Segmentation,
+  useAllLabels,
+} from "@/hooks/streetscapes";
 import {
   Annotorious,
   type ImageAnnotation,
@@ -8,8 +12,24 @@ import {
   ImageAnnotator,
   UserSelectAction,
   ShapeType,
+  type AnnotoriousImageAnnotator,
+  type Polygon,
+  useHover,
 } from "@annotorious/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+
+import "@annotorious/react/annotorious-react.css";
+import { Label } from "./ui/label";
+import { SquarePlusIcon } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
 
 export function AnnotatedImage({
   id,
@@ -87,15 +107,73 @@ function mapSegmentationsToAnnotations(
         bodies: [
           {
             id: `${id}-label`,
-            annotation: id,
             purpose: "tagging",
             value: instance.label,
+          },
+          {
+            id: `${id}-segmentation`,
+            purpose: "linking",
+            value: segmentation.id,
           },
         ],
       };
     }),
   );
 }
+
+function mapAnnotationToInstance(
+  label: string,
+  annotation: ImageAnnotation,
+): Instance {
+  if (annotation.target.selector.type !== ShapeType.POLYGON) {
+    throw new Error("Only support polygon");
+  }
+  const g = annotation.target.selector as Polygon;
+  return {
+    label,
+    polygon: [g.geometry.points as [number, number][]],
+  };
+}
+
+function LabelToDraw({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (value: string) => void;
+}) {
+  const allLabels = useAllLabels();
+  return (
+    <Label title="Label of drawn segment">
+      <Select value={value} onValueChange={(v) => onChange(v!)}>
+        <SelectTrigger className="w-full max-w-48">
+          <SelectValue
+            placeholder="Select a fruit"
+            style={{ color: allLabels[value] }}
+          />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            <SelectLabel>Label</SelectLabel>
+            {Object.entries(allLabels).map(([label, color]) => (
+              <SelectItem
+                key={label}
+                style={{
+                  color,
+                }}
+                value={label}
+              >
+                {label}
+              </SelectItem>
+            ))}
+          </SelectGroup>
+        </SelectContent>
+      </Select>
+      <SquarePlusIcon />
+    </Label>
+  );
+}
+
 function RealAnnotatedImage({
   url,
   id,
@@ -105,20 +183,49 @@ function RealAnnotatedImage({
   id: string;
   segmentations: Segmentation[];
 }) {
-  const allLabel = useAllLabels();
-  const annot = useAnnotator();
+  const allLabels = useAllLabels();
+  const annot = useAnnotator<AnnotoriousImageAnnotator>();
+  const [drawLabel, setDrawLabel] = useState(Object.keys(allLabels)[0]);
+  const hoveredAnnotation = useHover();
+  const annotations = mapSegmentationsToAnnotations(segmentations);
+
+  useEffect(() => {
+    console.log(hoveredAnnotation);
+  }, [hoveredAnnotation]);
+
+  useEffect(() => {
+    if (!annot) return;
+    annot.on("createAnnotation", annotationCreated);
+    function annotationCreated(a: ImageAnnotation) {
+      const defaultManualSegmentation: Segmentation = {
+        model_name: "manual",
+        id: "<manual>",
+        run_args: "",
+        instances: [],
+        notes: "",
+      };
+      const manualSegmentation =
+        segmentations.find((s) => s.model_name === "manual") ??
+        defaultManualSegmentation;
+      manualSegmentation.instances!.push(mapAnnotationToInstance(drawLabel, a));
+      console.log(JSON.stringify(manualSegmentation, undefined, 2));
+      // TODO write to server
+    }
+    return () => {
+      annot.off("createAnnotation", annotationCreated);
+    };
+  }, [annot, drawLabel, segmentations]);
 
   useEffect(() => {
     if (!annot) return;
 
-    const annotations = mapSegmentationsToAnnotations(segmentations);
     annot.setAnnotations(annotations);
 
     return () => {
       // Cleanup when image changes
       annot.setAnnotations([]);
     };
-  }, [annot, segmentations]);
+  }, [annot, annotations]);
 
   const annotaterStyle = (
     annotation: ImageAnnotation,
@@ -126,7 +233,7 @@ function RealAnnotatedImage({
   ) => {
     const label = annotation.bodies.find((b) => b.purpose === "tagging")
       ?.value as string;
-    const color: Color = (allLabel[label] || "#FF0000") as Color;
+    const color: Color = (allLabels[label] || "#FF0000") as Color;
     const style: DrawingStyle = {
       stroke: color,
       strokeWidth: 2,
@@ -140,17 +247,21 @@ function RealAnnotatedImage({
   // TODO allow to edit segment
   // TODO add zoom support using openseadragon
   return (
-    <ImageAnnotator
-      tool="polygon"
-      drawingEnabled={false}
-      userSelectAction={UserSelectAction.NONE}
-      style={annotaterStyle}
-    >
-      <img
-        src={url}
-        alt={`Streetscape ${id}`}
-        className="max-w-full h-[80vh] object-contain"
-      />
-    </ImageAnnotator>
+    <>
+      <LabelToDraw value={drawLabel} onChange={setDrawLabel} />
+      <ImageAnnotator
+        tool="polygon"
+        drawingEnabled={true}
+        // Must be EDIT otherwise second draw fails
+        userSelectAction={UserSelectAction.EDIT}
+        style={annotaterStyle}
+      >
+        <img
+          src={url}
+          alt={`Streetscape ${id}`}
+          className="max-w-full max-h-[80vh] object-contain"
+        />
+      </ImageAnnotator>
+    </>
   );
 }

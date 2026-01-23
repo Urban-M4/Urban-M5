@@ -25,7 +25,7 @@ export function App() {
           >
             <ResizablePanel
               defaultSize={50}
-              minSize={20}
+              minSize={5}
               className="min-w-0 h-full"
             >
               <div className="h-full w-full overflow-hidden">
@@ -35,7 +35,7 @@ export function App() {
             <ResizableHandle withHandle className="mx-2" />
             <ResizablePanel
               defaultSize={50}
-              minSize={20}
+              minSize={5}
               className="min-w-0 h-full"
             >
               <div className="h-full w-full overflow-auto">
