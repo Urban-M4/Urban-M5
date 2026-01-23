@@ -1,11 +1,10 @@
 import type { Segmentation } from "@/hooks/streetscapes";
 import { useAllLabels } from "@/hooks/streetscapes";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { SegmentImage } from "@/components/SegmentImage";
-import { useHoverSegmentationInstance } from "@/lib/store";
 import { ToggleSegmentationButton } from "@/components/ToggleSegmentationButton";
 import { ToggleSegmentationsButton } from "@/components/ToggleSegmentationsButton";
+import { SegmentInstance } from "@/components/SegmentInstance";
 
 interface SegmentationsProps {
   imageId: string;
@@ -13,14 +12,6 @@ interface SegmentationsProps {
 }
 
 function SegmentationCard({ segmentation }: { segmentation: Segmentation }) {
-  const labels = useAllLabels();
-  const {
-    segmentationId: hoveredSegmentationId,
-    instanceIndex: hoveredInstanceIndex,
-    setHover,
-    clearHover,
-  } = useHoverSegmentationInstance();
-
   return (
     <Card>
       <CardHeader>
@@ -50,32 +41,14 @@ function SegmentationCard({ segmentation }: { segmentation: Segmentation }) {
           <div className="flex flex-col gap-2">
             <span className="text-sm font-medium">Instances:</span>
             <div className="flex flex-wrap gap-2">
-              {segmentation.instances.map((instance, instanceIndex) => {
-                const color =
-                  labels[instance.label as keyof typeof labels] || "#6b7280";
-                const isHovered =
-                  hoveredSegmentationId === segmentation.id &&
-                  hoveredInstanceIndex === instanceIndex;
-                return (
-                  <Badge
-                    key={instanceIndex}
-                    variant="secondary"
-                    style={{
-                      backgroundColor: color + "20",
-                      color: color,
-                      borderColor: color,
-                      borderWidth: isHovered ? 2 : 1,
-                    }}
-                    className="border"
-                    onMouseEnter={() =>
-                      setHover(segmentation.id, instanceIndex)
-                    }
-                    onMouseLeave={clearHover}
-                  >
-                    {instance.label}
-                  </Badge>
-                );
-              })}
+              {segmentation.instances.map((instance, instanceIndex) => (
+                <SegmentInstance
+                  key={instanceIndex}
+                  instance={instance}
+                  segmentationId={segmentation.id}
+                  instanceIndex={instanceIndex}
+                />
+              ))}
             </div>
           </div>
         )}

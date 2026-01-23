@@ -45,7 +45,7 @@ export function Notes({ value, onChange }: NotesProps) {
           onBlur={handleBlur}
           onKeyDown={handleKeyDown}
           autoFocus
-          className="min-h-25"
+          className="min-h-10"
         />
       </div>
     );
@@ -56,7 +56,7 @@ export function Notes({ value, onChange }: NotesProps) {
       <label className="text-sm font-medium mb-2 block">Notes</label>
       <div
         onClick={handleClick}
-        className="p-3 rounded-md cursor-text hover:bg-accent/50 transition-colors min-h-25 whitespace-pre-wrap"
+        className="p-3 rounded-md cursor-text hover:bg-accent/50 transition-colors min-h-10 whitespace-pre-wrap"
       >
         {value || (
           <span className="text-muted-foreground">Click to add notes...</span>

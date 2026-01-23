@@ -24,7 +24,6 @@ import { useEffect, useState } from "react";
 
 import "@annotorious/react/annotorious-react.css";
 import { Label } from "./ui/label";
-import { LabelVisibilityMenu } from "./LabelVisibilityMenu";
 import {
   Select,
   SelectContent,
@@ -34,6 +33,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+import { LabelVisibilityMenu } from "./LabelVisibilityMenu";
 
 export function AnnotatedImage({
   id,
