@@ -3,6 +3,9 @@ import { useAllLabels } from "@/hooks/streetscapes";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { SegmentImage } from "@/components/SegmentImage";
+import { useHoverSegmentationInstance } from "@/lib/store";
+import { ToggleSegmentationButton } from "@/components/ToggleSegmentationButton";
+import { ToggleSegmentationsButton } from "@/components/ToggleSegmentationsButton";
 
 interface SegmentationsProps {
   imageId: string;
@@ -11,10 +14,20 @@ interface SegmentationsProps {
 
 function SegmentationCard({ segmentation }: { segmentation: Segmentation }) {
   const labels = useAllLabels();
+  const {
+    segmentationId: hoveredSegmentationId,
+    instanceIndex: hoveredInstanceIndex,
+    setHover,
+    clearHover,
+  } = useHoverSegmentationInstance();
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-base">{segmentation.id}</CardTitle>
+        <div className="flex items-center justify-between gap-2">
+          <CardTitle className="text-base">{segmentation.id}</CardTitle>
+          <ToggleSegmentationButton segmentationId={segmentation.id} />
+        </div>
       </CardHeader>
       <CardContent className="flex flex-col gap-2">
         <div className="text-sm text-muted-foreground">
@@ -40,6 +53,9 @@ function SegmentationCard({ segmentation }: { segmentation: Segmentation }) {
               {segmentation.instances.map((instance, instanceIndex) => {
                 const color =
                   labels[instance.label as keyof typeof labels] || "#6b7280";
+                const isHovered =
+                  hoveredSegmentationId === segmentation.id &&
+                  hoveredInstanceIndex === instanceIndex;
                 return (
                   <Badge
                     key={instanceIndex}
@@ -48,8 +64,13 @@ function SegmentationCard({ segmentation }: { segmentation: Segmentation }) {
                       backgroundColor: color + "20",
                       color: color,
                       borderColor: color,
+                      borderWidth: isHovered ? 2 : 1,
                     }}
                     className="border"
+                    onMouseEnter={() =>
+                      setHover(segmentation.id, instanceIndex)
+                    }
+                    onMouseLeave={clearHover}
                   >
                     {instance.label}
                   </Badge>
@@ -64,10 +85,16 @@ function SegmentationCard({ segmentation }: { segmentation: Segmentation }) {
 }
 
 export function Segmentations({ imageId, segmentations }: SegmentationsProps) {
+  const allSegmentationIds = segmentations.map((s) => s.id);
+
   const header = (
     <div className="flex items-center justify-between gap-3">
       <span className="text-sm font-medium">Segmentations:</span>
-      <div className="flex items-center gap-2">
+      <div
+        className="flex items-center gap-2"
+        aria-label="Actions on segmentations"
+      >
+        <ToggleSegmentationsButton allSegmentationIds={allSegmentationIds} />
         <SegmentImage imageId={imageId} />
       </div>
     </div>

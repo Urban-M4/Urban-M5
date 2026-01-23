@@ -4,6 +4,10 @@ import {
   useAllLabels,
 } from "@/hooks/streetscapes";
 import {
+  useHoverSegmentationInstance,
+  useAnnotationVisibility,
+} from "@/lib/store";
+import {
   Annotorious,
   type ImageAnnotation,
   useAnnotator,
@@ -20,7 +24,7 @@ import { useEffect, useState } from "react";
 
 import "@annotorious/react/annotorious-react.css";
 import { Label } from "./ui/label";
-import { SquarePlusIcon } from "lucide-react";
+import { LabelVisibilityMenu } from "./LabelVisibilityMenu";
 import {
   Select,
   SelectContent,
@@ -108,17 +112,32 @@ function mapSegmentationsToAnnotations(
           {
             id: `${id}-label`,
             purpose: "tagging",
+            annotation: id,
             value: instance.label,
           },
           {
             id: `${id}-segmentation`,
             purpose: "linking",
+            annotation: id,
             value: segmentation.id,
           },
         ],
       };
     }),
   );
+}
+
+function parseAnnotationId(annotationId: string) {
+  const parts = annotationId.split(":");
+  if (parts.length < 5) return null;
+
+  const instanceIndex = Number(parts[parts.length - 1]);
+  if (Number.isNaN(instanceIndex)) return null;
+
+  return {
+    segmentationId: parts[1],
+    instanceIndex,
+  } as const;
 }
 
 function mapAnnotationToInstance(
@@ -144,13 +163,15 @@ function LabelToDraw({
 }) {
   const allLabels = useAllLabels();
   return (
-    <Label title="Label of drawn segment">
+    <Label title="Label of drawn segment, create new segment by dragging in image">
       <Select value={value} onValueChange={(v) => onChange(v!)}>
         <SelectTrigger className="w-full max-w-48">
           <SelectValue
             placeholder="Select a fruit"
             style={{ color: allLabels[value] }}
-          />
+          >
+            Draw {value}
+          </SelectValue>
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
@@ -163,13 +184,12 @@ function LabelToDraw({
                 }}
                 value={label}
               >
-                {label}
+                Draw {label}
               </SelectItem>
             ))}
           </SelectGroup>
         </SelectContent>
       </Select>
-      <SquarePlusIcon />
     </Label>
   );
 }
@@ -188,10 +208,41 @@ function RealAnnotatedImage({
   const [drawLabel, setDrawLabel] = useState(Object.keys(allLabels)[0]);
   const hoveredAnnotation = useHover();
   const annotations = mapSegmentationsToAnnotations(segmentations);
+  const {
+    segmentationId: hoveredSegmentationId,
+    instanceIndex: hoveredInstanceIndex,
+    setHover,
+    clearHover,
+  } = useHoverSegmentationInstance();
+  const { hiddenSegmentations, hiddenLabels } = useAnnotationVisibility();
+
+  // Filter annotations based on visibility state
+  const visibleAnnotations = annotations.filter((annotation) => {
+    const segmentationId = annotation.bodies.find(
+      (b) => b.purpose === "linking",
+    )?.value as string;
+    const label = annotation.bodies.find((b) => b.purpose === "tagging")
+      ?.value as string;
+
+    const isSegmentationHidden = hiddenSegmentations.has(segmentationId);
+    const isLabelHidden = hiddenLabels.has(label);
+
+    return !isSegmentationHidden && !isLabelHidden;
+  });
 
   useEffect(() => {
-    console.log(hoveredAnnotation);
-  }, [hoveredAnnotation]);
+    if (!hoveredAnnotation) {
+      clearHover();
+      return;
+    }
+
+    const parsed = parseAnnotationId(hoveredAnnotation.id);
+    if (parsed) {
+      setHover(parsed.segmentationId, parsed.instanceIndex);
+    } else {
+      clearHover();
+    }
+  }, [hoveredAnnotation, setHover, clearHover]);
 
   useEffect(() => {
     if (!annot) return;
@@ -217,15 +268,10 @@ function RealAnnotatedImage({
   }, [annot, drawLabel, segmentations]);
 
   useEffect(() => {
-    if (!annot) return;
-
-    annot.setAnnotations(annotations);
-
-    return () => {
-      // Cleanup when image changes
-      annot.setAnnotations([]);
-    };
-  }, [annot, annotations]);
+    if (!annot || annot.getAnnotations().length == visibleAnnotations.length)
+      return;
+    annot.setAnnotations(visibleAnnotations);
+  }, [annot, visibleAnnotations]);
 
   const annotaterStyle = (
     annotation: ImageAnnotation,
@@ -234,9 +280,13 @@ function RealAnnotatedImage({
     const label = annotation.bodies.find((b) => b.purpose === "tagging")
       ?.value as string;
     const color: Color = (allLabels[label] || "#FF0000") as Color;
+    const parsed = parseAnnotationId(annotation.id);
+    const isHovered =
+      parsed?.segmentationId === hoveredSegmentationId &&
+      parsed?.instanceIndex === hoveredInstanceIndex;
     const style: DrawingStyle = {
       stroke: color,
-      strokeWidth: 2,
+      strokeWidth: isHovered ? 4 : 2,
       fill: color,
       fillOpacity: 0.3,
     };
@@ -248,7 +298,10 @@ function RealAnnotatedImage({
   // TODO add zoom support using openseadragon
   return (
     <>
-      <LabelToDraw value={drawLabel} onChange={setDrawLabel} />
+      <div aria-label="Actions on image" className="flex gap-2">
+        <LabelToDraw value={drawLabel} onChange={setDrawLabel} />
+        <LabelVisibilityMenu />
+      </div>
       <ImageAnnotator
         tool="polygon"
         drawingEnabled={true}
