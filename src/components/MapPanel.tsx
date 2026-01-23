@@ -12,7 +12,7 @@ import "maplibre-gl/dist/maplibre-gl.css";
 
 import { useCurrentImageId, useImages } from "@/hooks/streetscapes";
 import { useTheme } from "@/components/theme-provider";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export function MapPanel() {
   const [currentImageId, setCurrentImageId] = useCurrentImageId();
@@ -76,7 +76,7 @@ export function MapPanel() {
     }
   }
 
-  const onHover = useCallback((event: MapLayerMouseEvent) => {
+  const onHover = (event: MapLayerMouseEvent) => {
     const {
       features,
       point: { x, y },
@@ -85,7 +85,7 @@ export function MapPanel() {
     // TODO handle/complain when multiple features
 
     setHoverInfo(hoveredFeature ? { feature: hoveredFeature, x, y } : null);
-  }, []);
+  };
 
   // TODO use clustering see https://visgl.github.io/react-map-gl/examples/maplibre/clusters
   return (

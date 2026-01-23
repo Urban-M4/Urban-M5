@@ -1,10 +1,9 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 import { parseAsString, useQueryState, type UseQueryStateReturn } from "nuqs";
 import createFetchClient from "openapi-fetch";
 import createClient from "openapi-react-query";
 import { palette } from "@/lib/label-colors";
 import type { components, paths } from "@/lib/streetscapes-api";
-import { useQuery } from "@tanstack/react-query";
 
 export type Polygon = [number, number][];
 export type MultiPolygon = Polygon[];
@@ -33,6 +32,7 @@ export function useImages() {
   // TODO construct filter based on search params
   // TODO once the OpenAPI spec is ready, replace with actual API call
   const $api = useStreetscapes();
+  // eslint-disable-next-line react-compiler/react-compiler
   return $api.useQuery("post", "/images", {
     placeholderData: [],
   });
@@ -47,6 +47,7 @@ export function useCurrentImageInfo() {
   const [imageId] = useCurrentImageId();
   const $api = useStreetscapes();
 
+  // eslint-disable-next-line react-compiler/react-compiler
   return $api.useQuery(
     "get",
     "/images/{image_id}",
@@ -117,6 +118,7 @@ const placeholderStats: AggregateStats = {
 
 export function useAggregateStats() {
   const $api = useStreetscapes();
+  // eslint-disable-next-line react-compiler/react-compiler
   return $api.useQuery("get", "/stats", {
     placeholderData: placeholderStats,
   });
