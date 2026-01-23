@@ -164,7 +164,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/images/{image_id}/{model_name}/{instance_idx}/{label}": {
+  "/images/{image_id}/{segmentation_id}/{instance_idx}/{label}": {
     parameters: {
       query?: never;
       header?: never;
@@ -177,7 +177,7 @@ export interface paths {
      * Set Instance Label
      * @description Set the label of a specific instance within a segmentation.
      */
-    post: operations["set_instance_label_images__image_id___model_name___instance_idx___label__post"];
+    post: operations["set_instance_label_images__image_id___segmentation_id___instance_idx___label__post"];
     delete?: never;
     options?: never;
     head?: never;
@@ -477,7 +477,7 @@ export interface operations {
       };
       header?: never;
       path: {
-        image_id: number;
+        image_id: string;
       };
       cookie?: never;
     };
@@ -508,13 +508,13 @@ export interface operations {
       query?: never;
       header?: never;
       path: {
-        image_id: number;
+        image_id: string;
       };
       cookie?: never;
     };
     requestBody: {
       content: {
-        "application/json": [string];
+        "application/json": string[];
       };
     };
     responses: {
@@ -545,7 +545,7 @@ export interface operations {
       };
       header?: never;
       path: {
-        image_id: number;
+        image_id: string;
       };
       cookie?: never;
     };
@@ -571,13 +571,13 @@ export interface operations {
       };
     };
   };
-  set_instance_label_images__image_id___model_name___instance_idx___label__post: {
+  set_instance_label_images__image_id___segmentation_id___instance_idx___label__post: {
     parameters: {
       query?: never;
       header?: never;
       path: {
         image_id: string;
-        model_name: string;
+        segmentation_id: string;
         instance_idx: number;
         label: string;
       };

@@ -145,3 +145,96 @@ export function useAllSources() {
 export function useAllModels() {
   return ["DinoSAM", "maskformer", "bfms"];
 }
+
+export function useImageActions() {
+  const $api = useStreetscapes();
+  // TODO do not repeat onSettled logic, reuse a common invalidate function
+
+  // eslint-disable-next-line react-compiler/react-compiler
+  const { mutate: setRating } = $api.useMutation(
+    "post",
+    "/images/{image_id}/rating",
+    {
+      onSettled(_data, _error, variables, _onMutateResult, context) {
+        context.client.invalidateQueries({
+          queryKey: [
+            "get",
+            "/images/{image_id}",
+            {
+              params: { path: { image_id: variables.params.path.image_id } },
+            },
+          ],
+        });
+      },
+    },
+  );
+  // eslint-disable-next-line react-compiler/react-compiler
+  const { mutate: setTags } = $api.useMutation(
+    "post",
+    "/images/{image_id}/tags",
+    {
+      // TODO for some reason a mutation with tags triggers another mutation with original tags
+      // causing change to be reverted, need to investigate
+      onSettled(_data, _error, variables, _onMutateResult, context) {
+        context.client.invalidateQueries({
+          queryKey: [
+            "get",
+            "/images/{image_id}",
+            {
+              params: { path: { image_id: variables.params.path.image_id } },
+            },
+          ],
+        });
+      },
+    },
+  );
+  // eslint-disable-next-line react-compiler/react-compiler
+  const { mutate: setNotes } = $api.useMutation(
+    "post",
+    "/images/{image_id}/notes",
+    {
+      onSettled(_data, _error, variables, _onMutateResult, context) {
+        context.client.invalidateQueries({
+          queryKey: [
+            "get",
+            "/images/{image_id}",
+            {
+              params: { path: { image_id: variables.params.path.image_id } },
+            },
+          ],
+        });
+      },
+    },
+  );
+
+  return {
+    setRating,
+    setTags,
+    setNotes,
+  };
+}
+
+export function useSegmentationActions() {
+  const $api = useStreetscapes();
+  // eslint-disable-next-line react-compiler/react-compiler
+  const { mutate: setSegmentLabel } = $api.useMutation(
+    "post",
+    "/images/{image_id}/{segmentation_id}/{instance_idx}/{label}",
+    {
+      onSettled(_data, _error, variables, _onMutateResult, context) {
+        context.client.invalidateQueries({
+          queryKey: [
+            "get",
+            "/images/{image_id}",
+            {
+              params: { path: { image_id: variables.params.path.image_id } },
+            },
+          ],
+        });
+      },
+    },
+  );
+  return {
+    setSegmentLabel,
+  };
+}

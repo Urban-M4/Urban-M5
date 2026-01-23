@@ -1,5 +1,4 @@
 import type { Segmentation } from "@/hooks/streetscapes";
-import { useAllLabels } from "@/hooks/streetscapes";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SegmentImage } from "@/components/SegmentImage";
 import { ToggleSegmentationButton } from "@/components/ToggleSegmentationButton";

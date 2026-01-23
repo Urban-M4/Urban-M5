@@ -11,7 +11,8 @@ Hosted at [https://urban-m4.github.io/Urban-M5/](https://urban-m4.github.io/Urba
 In normal usage you would start the streetscapes server and than follow the link it prints.
 
 ```bash
-streetscapes serve
+pip install streetscapes[explorer]
+streetscapes-explorer
 ```
 
 # Development
@@ -23,4 +24,6 @@ pnpm build # build for production
 pnpm format # format code with prettier
 pnpm lint # run eslint
 pnpm typecheck # run TypeScript type checking
+# When streetscapes explorer api changes, run:
+pnpm api:generate
 ```

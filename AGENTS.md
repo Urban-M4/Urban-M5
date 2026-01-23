@@ -6,10 +6,6 @@ Web application to look at and change [streetscapes](https://github.com/stefanv/
 
 In normal usage you would start the streetscapes server and than follow the link it prints.
 
-```bash
-streetscapes serve
-```
-
 # Development
 
 ```shell

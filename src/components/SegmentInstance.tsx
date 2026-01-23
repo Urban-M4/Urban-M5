@@ -1,5 +1,9 @@
 import type { Instance } from "@/hooks/streetscapes";
-import { useAllLabels } from "@/hooks/streetscapes";
+import {
+  useAllLabels,
+  useCurrentImageId,
+  useSegmentationActions,
+} from "@/hooks/streetscapes";
 import { Badge } from "@/components/ui/badge";
 import { useHoverSegmentationInstance } from "@/lib/store";
 import {
@@ -32,6 +36,8 @@ export function SegmentInstance({
     setHover,
     clearHover,
   } = useHoverSegmentationInstance();
+  const currentImageId = useCurrentImageId()[0];
+  const { setSegmentLabel } = useSegmentationActions();
 
   const color = labels[instance.label as keyof typeof labels] || "#6b7280";
   const isHovered =
@@ -65,8 +71,24 @@ export function SegmentInstance({
           <ContextMenuSubTrigger>Re-label</ContextMenuSubTrigger>
           <ContextMenuSubContent>
             <ContextMenuGroup>
-                {Object.entries(labels).filter(([label]) => label !== instance.label).map(([label, color]) => (
-                  <ContextMenuItem key={label}>
+              {Object.entries(labels)
+                .filter(([label]) => label !== instance.label)
+                .map(([label, color]) => (
+                  <ContextMenuItem
+                    key={label}
+                    onClick={() => {
+                      setSegmentLabel({
+                        params: {
+                          path: {
+                            image_id: currentImageId!,
+                            segmentation_id: segmentationId,
+                            instance_idx: instanceIndex,
+                            label: label,
+                          },
+                        },
+                      });
+                    }}
+                  >
                     <span
                       className="inline-block w-3 h-3 mr-2 rounded-full"
                       style={{ backgroundColor: color }}
