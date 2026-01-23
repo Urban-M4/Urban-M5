@@ -4,6 +4,7 @@ import { Button } from "./ui/button";
 import { SidebarTrigger } from "./ui/sidebar";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { ModeToggle } from "./mode-toggle";
+import { KeyboardShortcuts } from "./KeyboardShortcuts";
 
 function ImageNavigationButtons() {
   const { total, filtered, currentIndex, goToPrevious, goToNext } =
@@ -54,47 +55,53 @@ export function NavBar() {
       {/* Middle: Navigation Buttons */}
       <ImageNavigationButtons />
 
-      {/* Right: Info Popover */}
-      <div>
-        <Popover>
-          <PopoverTrigger
-            render={
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8"
-                title="Information"
-              >
-                <Info className="h-4 w-4" />
-              </Button>
-            }
-          ></PopoverTrigger>
-          <PopoverContent className="w-64" align="end">
-            <div className="space-y-2">
-              <h3 className="font-semibold text-sm">Resources</h3>
-              <div className="flex flex-col gap-2">
-                <a
-                  href="https://github.com/Urban-M4/Urban-M5"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-blue-600 hover:underline"
-                >
-                  GitHub Repository
-                </a>
-                <a
-                  href="https://streetscapes.readthedocs.io/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-blue-600 hover:underline"
-                >
-                  Streetscapes Documentation
-                </a>
-              </div>
-            </div>
-          </PopoverContent>
-        </Popover>
+      {/* Right: Info, Keyboard Shortcuts, Theme Toggle */}
+      <div className="flex items-center gap-2">
+        <About />
+        <KeyboardShortcuts />
         <ModeToggle />
       </div>
     </nav>
+  );
+}
+function About() {
+  return (
+    <Popover>
+      <PopoverTrigger
+        render={
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8"
+            title="Information"
+          >
+            <Info className="h-4 w-4" />
+          </Button>
+        }
+      ></PopoverTrigger>
+      <PopoverContent className="w-64" align="end">
+        <div className="space-y-2">
+          <h3 className="font-semibold text-sm">Resources</h3>
+          <div className="flex flex-col gap-2">
+            <a
+              href="https://github.com/Urban-M4/Urban-M5"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm text-blue-600 hover:underline"
+            >
+              GitHub Repository
+            </a>
+            <a
+              href="https://streetscapes.readthedocs.io/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm text-blue-600 hover:underline"
+            >
+              Streetscapes Documentation
+            </a>
+          </div>
+        </div>
+      </PopoverContent>
+    </Popover>
   );
 }

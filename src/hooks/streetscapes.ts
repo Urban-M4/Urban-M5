@@ -29,8 +29,6 @@ export function useStreetscapes() {
 }
 
 export function useImages() {
-  // TODO construct filter based on search params
-  // TODO once the OpenAPI spec is ready, replace with actual API call
   const $api = useStreetscapes();
   // eslint-disable-next-line react-compiler/react-compiler
   return $api.useQuery("post", "/images", {
@@ -114,6 +112,7 @@ const placeholderStats: AggregateStats = {
   model_run_names: [],
   image_sources: [],
   date_range: ["1970-01-01", "2100-12-31"],
+  models: ["manual"],
 };
 
 export function useAggregateStats() {
@@ -143,7 +142,8 @@ export function useAllSources() {
 }
 
 export function useAllModels() {
-  return ["DinoSAM", "maskformer", "bfms"];
+  const { data = placeholderStats } = useAggregateStats();
+  return data.models;
 }
 
 export function useImageActions() {
@@ -173,8 +173,6 @@ export function useImageActions() {
     "post",
     "/images/{image_id}/tags",
     {
-      // TODO for some reason a mutation with tags triggers another mutation with original tags
-      // causing change to be reverted, need to investigate
       onSettled(_data, _error, variables, _onMutateResult, context) {
         context.client.invalidateQueries({
           queryKey: [

@@ -223,7 +223,6 @@ export function Filters() {
           </Combobox>
         </SidebarGroupContent>
       </SidebarGroup>
-      {/* TODO add filter for bounding box, either by using viewport of map, selecting a rectangle on map, or entering coordinates */}
       <SidebarGroup>
         <SidebarGroupContent>
           <Button

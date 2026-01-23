@@ -67,7 +67,6 @@ function mapSegmentationsToAnnotations(
       const xs = allPoints.map(([x]) => x);
       const ys = allPoints.map(([, y]) => y);
 
-      // TODO calculate bound on server
       const overallBounds = {
         minX: Math.min(...xs),
         minY: Math.min(...ys),
@@ -260,7 +259,7 @@ function RealAnnotatedImage({
         defaultManualSegmentation;
       manualSegmentation.instances!.push(mapAnnotationToInstance(drawLabel, a));
       console.log(JSON.stringify(manualSegmentation, undefined, 2));
-      // TODO write to server
+      // TODO write to server, see https://github.com/Urban-M4/Urban-M5/issues/4
     }
     return () => {
       annot.off("createAnnotation", annotationCreated);
@@ -293,9 +292,6 @@ function RealAnnotatedImage({
     return style;
   };
 
-  // TODO allow to add segment, can add but not save to server yet, new segment printed to console
-  // TODO allow to edit segment, can edit but not save to server yet, updated segment printed to console
-  // TODO add zoom support using openseadragon
   return (
     <>
       <div aria-label="Actions on image" className="flex gap-2">

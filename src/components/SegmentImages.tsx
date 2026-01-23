@@ -34,7 +34,7 @@ export function SegmentImages() {
       title="Apply Segmentation to filtered images"
       description={`This will run segmentation on all ${total} filtered images using the selected model. This may take a while.`}
       trigger={
-        <Button size="sm">
+        <Button size="sm" disabled>
           <WandSparkles className="h-4 w-4" />
           <span className="ml-2">Segment filtered</span>
         </Button>

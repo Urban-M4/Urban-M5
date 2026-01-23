@@ -220,6 +220,8 @@ export interface components {
       image_sources: string[];
       /** Date Range */
       date_range: [string, string];
+      /** Models */
+      models: string[];
     };
     /** Bbox */
     Bbox: {

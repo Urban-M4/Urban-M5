@@ -70,7 +70,6 @@ export function MapPanel() {
       layers: ["images"],
     });
     if (features.length > 0) {
-      // TODO handle/complain when multiple features
       const feature = features[0];
       setCurrentImageId(feature.properties.id);
     }
@@ -82,12 +81,9 @@ export function MapPanel() {
       point: { x, y },
     } = event;
     const hoveredFeature = features && features[0];
-    // TODO handle/complain when multiple features
-
     setHoverInfo(hoveredFeature ? { feature: hoveredFeature, x, y } : null);
   };
 
-  // TODO use clustering see https://visgl.github.io/react-map-gl/examples/maplibre/clusters
   return (
     <div className="relative overflow-hidden h-full w-full">
       <Map
@@ -103,7 +99,6 @@ export function MapPanel() {
         onMouseMove={onHover}
         interactiveLayerIds={["images"]}
       >
-        {/* TODO add control to zoom to fit all points */}
         <FullscreenControl position="top-left" />
         <NavigationControl position="top-left" />
         <ScaleControl />

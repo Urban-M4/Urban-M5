@@ -10,7 +10,6 @@ interface SegmentImageProps {
 export function SegmentImage({ imageId }: SegmentImageProps) {
   function onSubmit(formData: FormData) {
     formData.set("imageId", imageId);
-    // TODO call streetscapes API to start segmentation job for one image
     console.log("Segment single image", Array.from(formData.entries()));
 
     toast.promise(
@@ -32,7 +31,12 @@ export function SegmentImage({ imageId }: SegmentImageProps) {
       title="Apply Segmentation to image"
       description={`This will run segmentation on image ${imageId} using the selected model.`}
       trigger={
-        <Button size="default" variant="secondary" title="Segment this image">
+        <Button
+          size="default"
+          variant="secondary"
+          title="Segment this image"
+          disabled
+        >
           <WandSparkles className="h-4 w-4" />
         </Button>
       }
