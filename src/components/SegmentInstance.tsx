@@ -44,6 +44,7 @@ export function SegmentInstance({
     hoveredSegmentationId === segmentationId &&
     hoveredInstanceIndex === instanceIndex;
 
+  // TODO context menu is not really discoverable, change rendering of label to make actions more obvious
   return (
     <ContextMenu>
       <ContextMenuTrigger>

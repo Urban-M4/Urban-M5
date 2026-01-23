@@ -27,6 +27,8 @@ interface TagItem {
   value: string;
 }
 
+// Modelled after https://base-ui.com/react/components/combobox#creatable
+
 export function Tags({ tags, onChange }: TagsProps) {
   const anchor = useComboboxAnchor();
   const [inputValue, setInputValue] = React.useState("");

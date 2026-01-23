@@ -6,6 +6,8 @@ Web application to look at and change [streetscapes](https://github.com/stefanv/
 
 Hosted at [https://urban-m4.github.io/Urban-M5/](https://urban-m4.github.io/Urban-M5/).
 
+![Screenshot of Urban-M5](./screenshot.png)
+
 ## Usage
 
 In normal usage you would start the streetscapes server and than follow the link it prints.

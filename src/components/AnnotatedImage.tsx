@@ -293,8 +293,8 @@ function RealAnnotatedImage({
     return style;
   };
 
-  // TODO allow to add segment
-  // TODO allow to edit segment
+  // TODO allow to add segment, can add but not save to server yet, new segment printed to console
+  // TODO allow to edit segment, can edit but not save to server yet, updated segment printed to console
   // TODO add zoom support using openseadragon
   return (
     <>
