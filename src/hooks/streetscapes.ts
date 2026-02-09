@@ -188,18 +188,25 @@ export function useImageActions() {
     "/images/{image_id}/tags",
     {
       onSettled(_data, _error, variables, _onMutateResult, context) {
-        context.client.invalidateQueries({
-          queryKey: [
-            "get",
-            "/images/{image_id}",
-            {
-              params: { path: { image_id: variables.params.path.image_id } },
-            },
-          ],
-        });
+        return Promise.all([
+          context.client.invalidateQueries({
+            queryKey: [
+              "get",
+              "/images/{image_id}",
+              {
+                params: { path: { image_id: variables.params.path.image_id } },
+              },
+            ],
+          }),
+          context.client.invalidateQueries({
+            // TODO only invalidate /stats when a new unknown tag is added or unique tag is removed
+            queryKey: ["get", "/stats"],
+          }),
+        ]);
       },
     },
   );
+
   // eslint-disable-next-line react-compiler/react-compiler
   const { mutate: setNotes } = $api.useMutation(
     "post",
