@@ -35,6 +35,8 @@ export function useImages() {
   const query: ImagesQueryParams = {
     sources: filters.sources,
     tags: filters.tags,
+    labels: filters.labels,
+    models: filters.models,
   };
   if (filters.max_captured_at && filters.min_captured_at) {
     query.date_range = [filters.min_captured_at, filters.max_captured_at];
