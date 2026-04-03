@@ -3,6 +3,7 @@ import {
   useAllLabels,
   useAllSources,
   useAllModels,
+  useAllModelRunNames,
 } from "../hooks/streetscapes";
 import { Label } from "./ui/label";
 import {
@@ -39,6 +40,7 @@ export function Filters() {
   const tags = useAllTags();
   const labels = useAllLabels();
   const models = useAllModels();
+  const runNames = useAllModelRunNames();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -69,6 +71,7 @@ export function Filters() {
       min_captured_at: null,
       labels: [],
       models: [],
+      model_runs: [],
       image_ratings: [],
       segmentation_ratings: [],
     });
@@ -79,6 +82,7 @@ export function Filters() {
     filters.tags.length > 0 ||
     filters.labels.length > 0 ||
     filters.models.length > 0 ||
+    filters.model_runs.length > 0 ||
     filters.image_ratings.length > 0 ||
     filters.segmentation_ratings.length > 0 ||
     filters.max_captured_at ||
@@ -208,6 +212,43 @@ export function Filters() {
             </ComboboxChips>
             <ComboboxContent>
               <ComboboxEmpty>No models found.</ComboboxEmpty>
+              <ComboboxList>
+                {(item) => (
+                  <ComboboxItem key={item} value={item}>
+                    {item}
+                  </ComboboxItem>
+                )}
+              </ComboboxList>
+            </ComboboxContent>
+          </Combobox>
+        </SidebarGroupContent>
+      </SidebarGroup>
+      <SidebarGroup>
+        <SidebarGroupLabel>Model Runs</SidebarGroupLabel>
+        <SidebarGroupContent>
+          <Combobox
+            items={runNames}
+            multiple
+            value={filters.model_runs}
+            onValueChange={(value) =>
+              handleMultiSelectChange("model_runs", value as string[])
+            }
+          >
+            <ComboboxChips>
+              <ComboboxValue>
+                {filters.model_runs.map((item) => (
+                  <ComboboxChip
+                    key={item}
+                    className="whitespace-normal break-all h-auto"
+                  >
+                    {item}
+                  </ComboboxChip>
+                ))}
+              </ComboboxValue>
+              <ComboboxChipsInput placeholder="Select run names..." />
+            </ComboboxChips>
+            <ComboboxContent>
+              <ComboboxEmpty>No runs found.</ComboboxEmpty>
               <ComboboxList>
                 {(item) => (
                   <ComboboxItem key={item} value={item}>

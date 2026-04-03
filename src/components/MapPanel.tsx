@@ -4,7 +4,6 @@ import Map, {
   NavigationControl,
   ScaleControl,
   Source,
-  useMap,
   type MapGeoJSONFeature,
   type MapLayerMouseEvent,
   type MapRef,

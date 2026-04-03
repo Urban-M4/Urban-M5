@@ -39,7 +39,7 @@ export function useImages() {
     models: filters.models,
     image_ratings: filters.image_ratings,
     segmentation_ratings: filters.segmentation_ratings,
-    model_runs: filters.model_runs, 
+    model_runs: filters.model_runs,
   };
   if (filters.max_captured_at && filters.min_captured_at) {
     query.date_range = [filters.min_captured_at, filters.max_captured_at];
