@@ -8,8 +8,8 @@ importers:
   .:
     dependencies:
       "@annotorious/react":
-        specifier: ^3.7.19
-        version: 3.7.19(openseadragon@5.0.1)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+        specifier: ^3.8.0
+        version: 3.8.0(openseadragon@6.0.2)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       "@base-ui/react":
         specifier: ^1.1.0
         version: 1.1.0(@types/react@19.2.8)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
@@ -50,8 +50,8 @@ importers:
         specifier: ^0.5.1
         version: 0.5.1(@tanstack/react-query@5.90.19(react@19.2.3))(openapi-fetch@0.15.0)
       openseadragon:
-        specifier: ^5.0.1
-        version: 5.0.1
+        specifier: ^6.0.2
+        version: 6.0.2
       react:
         specifier: ^19.2.0
         version: 19.2.3
@@ -133,33 +133,33 @@ importers:
         version: 7.3.1(@types/node@24.10.9)(jiti@2.6.1)(lightningcss@1.30.2)
 
 packages:
-  "@annotorious/annotorious@3.7.19":
+  "@annotorious/annotorious@3.8.0":
     resolution:
       {
-        integrity: sha512-AzteOiFZNi3BLggQf2BO35eDIMYOfXFebnote823/BW6e02nfWTw08LKh+RGQj+CaQRlVwZXiRM2VvUNSBP5kA==,
+        integrity: sha512-jaKAJ3Jp0g8atvHe1LfnczVPSWavGNhx/upVtZDUgTvrOAXjkDMWc4p0Dcoy5EveNwdvImdNU5y7XEw2qUnAng==,
       }
 
-  "@annotorious/core@3.7.19":
+  "@annotorious/core@3.8.0":
     resolution:
       {
-        integrity: sha512-0nS8Zo5ndtkD5W6xesg7tJmhKIJktoL4me01VRGZPr961GH4tH39kSg6iednfyyFAt6Z+2UFOt6s/yb0/lNcYA==,
+        integrity: sha512-Xclq31mS9INpqMlv3QnfuwPI8R6jcowWkxmEQ+1j0Nnj88KmO2iZFr+PY6ZTfKK8AMhnjALc9a83FlCMNXl4Fw==,
       }
 
-  "@annotorious/openseadragon@3.7.19":
+  "@annotorious/openseadragon@3.8.0":
     resolution:
       {
-        integrity: sha512-IJxHRyHmcxk7lJO/fsXYbKTj8HJlfbL8PDlXik20qeQhlz6BAf0Ccp50Kr4faONtKkX6QfssF5sESu26GuqAxA==,
+        integrity: sha512-gNlGkW8QiY9upOSBjmPkEq4vh1Xk9NPCtnr72lHb+geYVQFZPQ9Y47zPKe4NeBNIwgDDQ54FHPBHubpjgqOb2g==,
       }
     peerDependencies:
-      openseadragon: ^3.0.0 || ^4.0.0 || ^5.0.0
+      openseadragon: ">= ^4.0.0 || >= ^5.0.0 || >= ^6.0.0"
 
-  "@annotorious/react@3.7.19":
+  "@annotorious/react@3.8.0":
     resolution:
       {
-        integrity: sha512-XFcwScoCrBNT5ijMBIkkhppQET2DiBs7xeFsAC3c/iMWFGvf5WtRaJfkngBEFlkkWmJLDuD7z/4q+MgzEMfHKQ==,
+        integrity: sha512-tZINUH+7w5Ec9w8Z5y4uclHF/bvzsqgoLTiOqD0E0ymuQzfoDKPXQ7pg7HPspNEAbHj7ZIFChe2NxAA7ZdyuuQ==,
       }
     peerDependencies:
-      openseadragon: ">= ^4.0.0 || >= ^5.0.0"
+      openseadragon: ">= ^4.0.0 || >= ^5.0.0 || >= ^6.0.0"
       react: ^16.8.0 || >= ^17.x || >= ^18.x || >= ^19.x
       react-dom: ^16.8.0 || >= ^17.x || >= ^18.x || >= ^19.x
     peerDependenciesMeta:
@@ -769,10 +769,22 @@ packages:
         integrity: sha512-sGnvb5dmrJaKEZ+LDIpguvdX3bDlEllmv4/ClQ9awcmCZrlx5jQyyMWFM5kBI+EyNOCDDiKk8il0zeuX3Zlg/w==,
       }
 
+  "@floating-ui/core@1.7.5":
+    resolution:
+      {
+        integrity: sha512-1Ih4WTWyw0+lKyFMcBHGbb5U5FtuHJuujoyyr5zTaWS5EYMeT6Jb2AuDeftsCsEuchO+mM2ij5+q9crhydzLhQ==,
+      }
+
   "@floating-ui/dom@1.7.4":
     resolution:
       {
         integrity: sha512-OOchDgh4F2CchOX94cRVqhvy7b3AFb+/rQXyswmzmGakRfkMgoWVjfnLWkRirfLEfuD4ysVW16eXzwt3jHIzKA==,
+      }
+
+  "@floating-ui/dom@1.7.6":
+    resolution:
+      {
+        integrity: sha512-9gZSAI5XM36880PPMm//9dfiEngYoC6Am2izES1FF406YFsjvyBMmeJ2g4SAju3xWwtuynNRFL2s9hgxpLI5SQ==,
       }
 
   "@floating-ui/react-dom@2.1.6":
@@ -784,10 +796,19 @@ packages:
       react: ">=16.8.0"
       react-dom: ">=16.8.0"
 
-  "@floating-ui/react@0.27.16":
+  "@floating-ui/react-dom@2.1.8":
     resolution:
       {
-        integrity: sha512-9O8N4SeG2z++TSM8QA/KTeKFBVCNEz/AGS7gWPJf6KFRzmRWixFRnCnkPHRDwSVZW6QPDO6uT0P2SpWNKCc9/g==,
+        integrity: sha512-cC52bHwM/n/CxS87FH0yWdngEZrjdtLW/qVruo68qg+prK7ZQ4YGdut2GyDVpoGeAYe/h899rVeOVm6Oi40k2A==,
+      }
+    peerDependencies:
+      react: ">=16.8.0"
+      react-dom: ">=16.8.0"
+
+  "@floating-ui/react@0.27.19":
+    resolution:
+      {
+        integrity: sha512-31B8h5mm8YxotlE7/AU/PhNAl8eWxAmjL/v2QOxroDNkTFLk3Uu82u63N3b6TXa4EGJeeZLVcd/9AlNlVqzeog==,
       }
     peerDependencies:
       react: ">=17.0.0"
@@ -797,6 +818,12 @@ packages:
     resolution:
       {
         integrity: sha512-aGTxbpbg8/b5JfU1HXSrbH3wXZuLPJcNEcZQFMxLs3oSzgtVu6nFPkbbGGUvBcUjKV2YyB9Wxxabo+HEH9tcRQ==,
+      }
+
+  "@floating-ui/utils@0.2.11":
+    resolution:
+      {
+        integrity: sha512-RiB/yIh78pcIxl6lLMG0CgBXAZ2Y0eVHqMPYugu+9U0AeT6YBeiJpf7lbdJNIugFP5SIjwNRgo4DhR1Qxi26Gg==,
       }
 
   "@fontsource-variable/inter@5.2.8":
@@ -1492,6 +1519,7 @@ packages:
       }
     cpu: [arm]
     os: [linux]
+    libc: [glibc]
 
   "@rollup/rollup-linux-arm-musleabihf@4.55.2":
     resolution:
@@ -1500,6 +1528,7 @@ packages:
       }
     cpu: [arm]
     os: [linux]
+    libc: [musl]
 
   "@rollup/rollup-linux-arm64-gnu@4.55.2":
     resolution:
@@ -1508,6 +1537,7 @@ packages:
       }
     cpu: [arm64]
     os: [linux]
+    libc: [glibc]
 
   "@rollup/rollup-linux-arm64-musl@4.55.2":
     resolution:
@@ -1516,6 +1546,7 @@ packages:
       }
     cpu: [arm64]
     os: [linux]
+    libc: [musl]
 
   "@rollup/rollup-linux-loong64-gnu@4.55.2":
     resolution:
@@ -1524,6 +1555,7 @@ packages:
       }
     cpu: [loong64]
     os: [linux]
+    libc: [glibc]
 
   "@rollup/rollup-linux-loong64-musl@4.55.2":
     resolution:
@@ -1532,6 +1564,7 @@ packages:
       }
     cpu: [loong64]
     os: [linux]
+    libc: [musl]
 
   "@rollup/rollup-linux-ppc64-gnu@4.55.2":
     resolution:
@@ -1540,6 +1573,7 @@ packages:
       }
     cpu: [ppc64]
     os: [linux]
+    libc: [glibc]
 
   "@rollup/rollup-linux-ppc64-musl@4.55.2":
     resolution:
@@ -1548,6 +1582,7 @@ packages:
       }
     cpu: [ppc64]
     os: [linux]
+    libc: [musl]
 
   "@rollup/rollup-linux-riscv64-gnu@4.55.2":
     resolution:
@@ -1556,6 +1591,7 @@ packages:
       }
     cpu: [riscv64]
     os: [linux]
+    libc: [glibc]
 
   "@rollup/rollup-linux-riscv64-musl@4.55.2":
     resolution:
@@ -1564,6 +1600,7 @@ packages:
       }
     cpu: [riscv64]
     os: [linux]
+    libc: [musl]
 
   "@rollup/rollup-linux-s390x-gnu@4.55.2":
     resolution:
@@ -1572,6 +1609,7 @@ packages:
       }
     cpu: [s390x]
     os: [linux]
+    libc: [glibc]
 
   "@rollup/rollup-linux-x64-gnu@4.55.2":
     resolution:
@@ -1580,6 +1618,7 @@ packages:
       }
     cpu: [x64]
     os: [linux]
+    libc: [glibc]
 
   "@rollup/rollup-linux-x64-musl@4.55.2":
     resolution:
@@ -1588,6 +1627,7 @@ packages:
       }
     cpu: [x64]
     os: [linux]
+    libc: [musl]
 
   "@rollup/rollup-openbsd-x64@4.55.2":
     resolution:
@@ -1715,6 +1755,7 @@ packages:
     engines: { node: ">= 10" }
     cpu: [arm64]
     os: [linux]
+    libc: [glibc]
 
   "@tailwindcss/oxide-linux-arm64-musl@4.1.18":
     resolution:
@@ -1724,6 +1765,7 @@ packages:
     engines: { node: ">= 10" }
     cpu: [arm64]
     os: [linux]
+    libc: [musl]
 
   "@tailwindcss/oxide-linux-x64-gnu@4.1.18":
     resolution:
@@ -1733,6 +1775,7 @@ packages:
     engines: { node: ">= 10" }
     cpu: [x64]
     os: [linux]
+    libc: [glibc]
 
   "@tailwindcss/oxide-linux-x64-musl@4.1.18":
     resolution:
@@ -1742,6 +1785,7 @@ packages:
     engines: { node: ">= 10" }
     cpu: [x64]
     os: [linux]
+    libc: [musl]
 
   "@tailwindcss/oxide-wasm32-wasi@4.1.18":
     resolution:
@@ -3618,6 +3662,7 @@ packages:
     engines: { node: ">= 12.0.0" }
     cpu: [arm64]
     os: [linux]
+    libc: [glibc]
 
   lightningcss-linux-arm64-musl@1.30.2:
     resolution:
@@ -3627,6 +3672,7 @@ packages:
     engines: { node: ">= 12.0.0" }
     cpu: [arm64]
     os: [linux]
+    libc: [musl]
 
   lightningcss-linux-x64-gnu@1.30.2:
     resolution:
@@ -3636,6 +3682,7 @@ packages:
     engines: { node: ">= 12.0.0" }
     cpu: [x64]
     os: [linux]
+    libc: [glibc]
 
   lightningcss-linux-x64-musl@1.30.2:
     resolution:
@@ -3645,6 +3692,7 @@ packages:
     engines: { node: ">= 12.0.0" }
     cpu: [x64]
     os: [linux]
+    libc: [musl]
 
   lightningcss-win32-arm64-msvc@1.30.2:
     resolution:
@@ -3873,18 +3921,18 @@ packages:
     engines: { node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1 }
     hasBin: true
 
-  nanoid@5.1.6:
+  nanoid@5.1.7:
     resolution:
       {
-        integrity: sha512-c7+7RQ+dMB5dPwwCp4ee1/iV/q2P6aK1mTZcfr1BTuVlyW9hJYiMPybJCcnBlQtuSmTIWNeazm/zqNoZSSElBg==,
+        integrity: sha512-ua3NDgISf6jdwezAheMOk4mbE1LXjm1DfMUDMuJf4AqxLFK3ccGpgWizwa5YV7Yz9EpXwEaWoRXSb/BnV0t5dQ==,
       }
     engines: { node: ^18 || >=20 }
     hasBin: true
 
-  nanostores@1.1.0:
+  nanostores@1.2.0:
     resolution:
       {
-        integrity: sha512-yJBmDJr18xy47dbNVlHcgdPrulSn1nhSE6Ns9vTG+Nx9VPT6iV1MD6aQFp/t52zpf82FhLLTXAXr30NuCnxvwA==,
+        integrity: sha512-F0wCzbsH80G7XXo0Jd9/AVQC7ouWY6idUCTnMwW5t/Rv9W8qmO6endavDwg7TNp5GbugwSukFMVZqzPSrSMndg==,
       }
     engines: { node: ^20.0.0 || >=22.0.0 }
 
@@ -4054,10 +4102,10 @@ packages:
     peerDependencies:
       typescript: ^5.x
 
-  openseadragon@5.0.1:
+  openseadragon@6.0.2:
     resolution:
       {
-        integrity: sha512-a/hjouW9i3UfWxRADVYN2MyRhXMGnE7x9VVL7/4jXCcDLFyO4UM5o4RStYtqa5BfaHw/wMNAaD2WbxQF8f1pJg==,
+        integrity: sha512-WNPPQWp9sHunyzkV9J2yhfxnSfDF9CfBsE6unmkdxh1uTWzFcueMvBPhmuZdY7M1v/ffJ3NdaF3Qq3jogphIbA==,
       }
 
   optionator@0.9.4:
@@ -5260,41 +5308,41 @@ packages:
         optional: true
 
 snapshots:
-  "@annotorious/annotorious@3.7.19":
+  "@annotorious/annotorious@3.8.0":
     dependencies:
-      "@annotorious/core": 3.7.19
+      "@annotorious/core": 3.8.0
       dequal: 2.0.3
       rbush: 4.0.1
       simplify-js: 1.2.4
       uuid: 13.0.0
 
-  "@annotorious/core@3.7.19":
+  "@annotorious/core@3.8.0":
     dependencies:
       dequal: 2.0.3
       nanoevents: 9.1.0
-      nanoid: 5.1.6
-      nanostores: 1.1.0
+      nanoid: 5.1.7
+      nanostores: 1.2.0
       uuid: 13.0.0
 
-  "@annotorious/openseadragon@3.7.19(openseadragon@5.0.1)":
+  "@annotorious/openseadragon@3.8.0(openseadragon@6.0.2)":
     dependencies:
-      "@annotorious/annotorious": 3.7.19
-      "@annotorious/core": 3.7.19
-      openseadragon: 5.0.1
+      "@annotorious/annotorious": 3.8.0
+      "@annotorious/core": 3.8.0
+      openseadragon: 6.0.2
       pixi.js: 7.4.3
       uuid: 13.0.0
 
-  "@annotorious/react@3.7.19(openseadragon@5.0.1)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)":
+  "@annotorious/react@3.8.0(openseadragon@6.0.2)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)":
     dependencies:
-      "@annotorious/annotorious": 3.7.19
-      "@annotorious/core": 3.7.19
-      "@annotorious/openseadragon": 3.7.19(openseadragon@5.0.1)
-      "@floating-ui/react": 0.27.16(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      "@annotorious/annotorious": 3.8.0
+      "@annotorious/core": 3.8.0
+      "@annotorious/openseadragon": 3.8.0(openseadragon@6.0.2)
+      "@floating-ui/react": 0.27.19(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       dequal: 2.0.3
       react: 19.2.3
       react-dom: 19.2.3(react@19.2.3)
     optionalDependencies:
-      openseadragon: 5.0.1
+      openseadragon: 6.0.2
 
   "@antfu/ni@25.0.0":
     dependencies:
@@ -5678,10 +5726,19 @@ snapshots:
     dependencies:
       "@floating-ui/utils": 0.2.10
 
+  "@floating-ui/core@1.7.5":
+    dependencies:
+      "@floating-ui/utils": 0.2.11
+
   "@floating-ui/dom@1.7.4":
     dependencies:
       "@floating-ui/core": 1.7.3
       "@floating-ui/utils": 0.2.10
+
+  "@floating-ui/dom@1.7.6":
+    dependencies:
+      "@floating-ui/core": 1.7.5
+      "@floating-ui/utils": 0.2.11
 
   "@floating-ui/react-dom@2.1.6(react-dom@19.2.3(react@19.2.3))(react@19.2.3)":
     dependencies:
@@ -5689,15 +5746,23 @@ snapshots:
       react: 19.2.3
       react-dom: 19.2.3(react@19.2.3)
 
-  "@floating-ui/react@0.27.16(react-dom@19.2.3(react@19.2.3))(react@19.2.3)":
+  "@floating-ui/react-dom@2.1.8(react-dom@19.2.3(react@19.2.3))(react@19.2.3)":
     dependencies:
-      "@floating-ui/react-dom": 2.1.6(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
-      "@floating-ui/utils": 0.2.10
+      "@floating-ui/dom": 1.7.6
+      react: 19.2.3
+      react-dom: 19.2.3(react@19.2.3)
+
+  "@floating-ui/react@0.27.19(react-dom@19.2.3(react@19.2.3))(react@19.2.3)":
+    dependencies:
+      "@floating-ui/react-dom": 2.1.8(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      "@floating-ui/utils": 0.2.11
       react: 19.2.3
       react-dom: 19.2.3(react@19.2.3)
       tabbable: 6.4.0
 
   "@floating-ui/utils@0.2.10": {}
+
+  "@floating-ui/utils@0.2.11": {}
 
   "@fontsource-variable/inter@5.2.8": {}
 
@@ -7431,9 +7496,9 @@ snapshots:
 
   nanoid@3.3.11: {}
 
-  nanoid@5.1.6: {}
+  nanoid@5.1.7: {}
 
-  nanostores@1.1.0: {}
+  nanostores@1.2.0: {}
 
   natural-compare@1.4.0: {}
 
@@ -7521,7 +7586,7 @@ snapshots:
       typescript: 5.9.3
       yargs-parser: 21.1.1
 
-  openseadragon@5.0.1: {}
+  openseadragon@6.0.2: {}
 
   optionator@0.9.4:
     dependencies:

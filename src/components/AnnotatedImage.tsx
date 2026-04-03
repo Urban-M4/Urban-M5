@@ -13,12 +13,13 @@ import {
   useAnnotator,
   type Color,
   type DrawingStyle,
-  ImageAnnotator,
   UserSelectAction,
   ShapeType,
   type AnnotoriousImageAnnotator,
   type Polygon,
   useHover,
+  OpenSeadragonAnnotator,
+  OpenSeadragonViewer,
 } from "@annotorious/react";
 import { useEffect, useState } from "react";
 
@@ -34,19 +35,30 @@ import {
   SelectValue,
 } from "./ui/select";
 import { LabelVisibilityMenu } from "./LabelVisibilityMenu";
+import type { Options } from "openseadragon";
 
 export function AnnotatedImage({
   id,
+  width,
+  height,
   url,
   segmentations,
 }: {
   id: string;
   url: string;
+  height: number;
+  width: number;
   segmentations: Segmentation[];
 }) {
   return (
     <Annotorious>
-      <RealAnnotatedImage url={url} id={id} segmentations={segmentations} />
+      <RealAnnotatedImage
+        url={url}
+        id={id}
+        height={height}
+        width={width}
+        segmentations={segmentations}
+      />
     </Annotorious>
   );
 }
@@ -196,10 +208,14 @@ function LabelToDraw({
 function RealAnnotatedImage({
   url,
   id,
+  height,
+  width,
   segmentations,
 }: {
   url: string;
   id: string;
+  height: number;
+  width: number;
   segmentations: Segmentation[];
 }) {
   const allLabels = useAllLabels();
@@ -292,25 +308,38 @@ function RealAnnotatedImage({
     return style;
   };
 
+  const options: Options = {
+    tileSources: {
+      type: "image",
+      width,
+      height,
+      url,
+    },
+    maxZoomPixelRatio: 8,
+    drawer: "canvas",
+    // TODO use/create icons that match esthetics of rest of app
+    prefixUrl: "http://openseadragon.github.io/openseadragon/images/",
+  };
+
   return (
     <>
       <div aria-label="Actions on image" className="flex gap-2">
         <LabelToDraw value={drawLabel} onChange={setDrawLabel} />
         <LabelVisibilityMenu />
       </div>
-      <ImageAnnotator
+      <OpenSeadragonAnnotator
         tool="polygon"
         drawingEnabled={true}
         // Must be EDIT otherwise second draw fails
         userSelectAction={UserSelectAction.EDIT}
         style={annotaterStyle}
       >
-        <img
-          src={url}
-          alt={`Streetscape ${id}`}
-          className="max-w-full max-h-[80vh] object-contain"
+        <OpenSeadragonViewer
+          key={id}
+          options={options}
+          className="w-full max-h-[50vh] h-[40vh] min-h-[12vh]"
         />
-      </ImageAnnotator>
+      </OpenSeadragonAnnotator>
     </>
   );
 }

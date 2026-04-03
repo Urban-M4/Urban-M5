@@ -27,6 +27,8 @@ export function ImagePanel() {
       <AnnotatedImage
         id={imageInfo.id}
         url={imageInfo.url}
+        height={imageInfo.height}
+        width={imageInfo.width}
         segmentations={imageInfo.segmentation ?? []}
       />
       <Tags
