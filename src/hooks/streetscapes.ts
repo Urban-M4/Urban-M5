@@ -263,7 +263,26 @@ export function useSegmentationActions() {
       },
     },
   );
+  // eslint-disable-next-line react-compiler/react-compiler
+  const { mutate: setSegmentationRating } = $api.useMutation(
+    "post",
+    "/images/{image_id}/{run_name}/rating",
+    {
+      onSettled(_data, _error, variables, _onMutateResult, context) {
+        context.client.invalidateQueries({
+          queryKey: [
+            "get",
+            "/images/{image_id}",
+            {
+              params: { path: { image_id: variables.params.path.image_id } },
+            },
+          ],
+        });
+      },
+    },
+  );
   return {
     setSegmentLabel,
+    setSegmentationRating,
   };
 }

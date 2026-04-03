@@ -1,4 +1,8 @@
-import type { Segmentation } from "@/hooks/streetscapes";
+import {
+  useCurrentImageId,
+  useSegmentationActions,
+  type Segmentation,
+} from "@/hooks/streetscapes";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SegmentImage } from "@/components/SegmentImage";
 import { ToggleSegmentationButton } from "@/components/ToggleSegmentationButton";
@@ -12,6 +16,8 @@ interface SegmentationsProps {
 }
 
 function SegmentationCard({ segmentation }: { segmentation: Segmentation }) {
+  const { setSegmentationRating } = useSegmentationActions();
+  const image_id = useCurrentImageId()[0]!;
   return (
     <Card>
       <CardHeader>
@@ -24,7 +30,21 @@ function SegmentationCard({ segmentation }: { segmentation: Segmentation }) {
         <div className="text-sm">
           <span className="font-medium">Model:</span> {segmentation.model_name}
         </div>
-        <Rating value={0} onChange={() => console.log("Not implemented")} />
+        <Rating
+          // TODO server does not return rating yet, see https://github.com/Urban-M4/streetscapes/issues/147
+          value={0} 
+          onChange={(value) =>
+            setSegmentationRating({
+              params: {
+                query: { rating: value },
+                path: {
+                  image_id: image_id,
+                  run_name: segmentation.id,
+                },
+              },
+            })
+          }
+        />
         {segmentation.run_args && (
           <details>
             <summary>Parameters</summary>
