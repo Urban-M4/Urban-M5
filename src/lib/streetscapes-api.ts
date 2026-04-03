@@ -164,7 +164,27 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/images/{image_id}/{segmentation_id}/{instance_idx}/{label}": {
+  "/images/{image_id}/{run_name}/rating": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Set Segmentation Rating
+     * @description Rate an image's segmentation.
+     */
+    post: operations["set_segmentation_rating_images__image_id___run_name__rating_post"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/images/{image_id}/{run_name}/{instance_idx}/{label}": {
     parameters: {
       query?: never;
       header?: never;
@@ -177,7 +197,7 @@ export interface paths {
      * Set Instance Label
      * @description Set the label of a specific instance within a segmentation.
      */
-    post: operations["set_instance_label_images__image_id___segmentation_id___instance_idx___label__post"];
+    post: operations["set_instance_label_images__image_id___run_name___instance_idx___label__post"];
     delete?: never;
     options?: never;
     head?: never;
@@ -306,6 +326,10 @@ export interface components {
       msg: string;
       /** Error Type */
       type: string;
+      /** Input */
+      input?: unknown;
+      /** Context */
+      ctx?: Record<string, never>;
     };
   };
   responses: never;
@@ -383,13 +407,14 @@ export interface operations {
         e?: number;
         s?: number;
         w?: number;
-        ratings?: number[];
-        model_runs?: string[];
+        image_ratings?: number[];
         sources?: string[];
         tags?: string[];
-        compass_angle?: number[];
         date_range?: [string, string];
-        panoramic?: number[];
+        models?: string[];
+        model_runs?: string[];
+        labels?: string[];
+        segmentation_ratings?: number[];
       };
       header?: never;
       path?: never;
@@ -451,7 +476,7 @@ export interface operations {
   set_rating_images__image_id__rating_post: {
     parameters: {
       query: {
-        rating: number | null;
+        rating: number;
       };
       header?: never;
       path: {
@@ -549,13 +574,47 @@ export interface operations {
       };
     };
   };
-  set_instance_label_images__image_id___segmentation_id___instance_idx___label__post: {
+  set_segmentation_rating_images__image_id___run_name__rating_post: {
+    parameters: {
+      query: {
+        rating: number;
+      };
+      header?: never;
+      path: {
+        image_id: string;
+        run_name: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": unknown;
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  set_instance_label_images__image_id___run_name___instance_idx___label__post: {
     parameters: {
       query?: never;
       header?: never;
       path: {
         image_id: string;
-        segmentation_id: string;
+        run_name: string;
         instance_idx: number;
         label: string;
       };
