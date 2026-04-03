@@ -45,6 +45,7 @@ function SegmentationCard({ segmentation }: { segmentation: Segmentation }) {
                   key={instanceIndex}
                   instance={instance}
                   segmentationId={segmentation.id}
+                  run_name={segmentation.id}
                   instanceIndex={instanceIndex}
                 />
               ))}

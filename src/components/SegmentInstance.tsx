@@ -21,12 +21,14 @@ import { TrashIcon } from "lucide-react";
 interface SegmentInstanceProps {
   instance: Instance;
   segmentationId: string;
+  run_name: string;
   instanceIndex: number;
 }
 
 export function SegmentInstance({
   instance,
   segmentationId,
+  run_name,
   instanceIndex,
 }: SegmentInstanceProps) {
   const labels = useAllLabels();
@@ -82,7 +84,7 @@ export function SegmentInstance({
                         params: {
                           path: {
                             image_id: currentImageId!,
-                            segmentation_id: segmentationId,
+                            run_name,
                             instance_idx: instanceIndex,
                             label: label,
                           },
