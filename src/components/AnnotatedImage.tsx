@@ -139,14 +139,16 @@ function mapSegmentationsToAnnotations(
 }
 
 function parseAnnotationId(annotationId: string) {
+  // "seg:maskformer-2026-04-03T08:41:02.567:0:building:0"
+  // ->
+  // segmentationId = "maskformer-2026-04-03T08:41:02.567"
+  // instanceIndex = 0
+  // segmentationId aka segmentations.run column is user defined
   const parts = annotationId.split(":");
-  if (parts.length < 5) return null;
-
-  const instanceIndex = Number(parts[parts.length - 1]);
-  if (Number.isNaN(instanceIndex)) return null;
-
+  const instanceIndex = parseInt(parts[parts.length - 1], 10);
+  const segmentationId = parts.slice(1, -3).join(":");
   return {
-    segmentationId: parts[1],
+    segmentationId,
     instanceIndex,
   } as const;
 }

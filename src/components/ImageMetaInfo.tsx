@@ -35,6 +35,9 @@ export function ImageMetaInfo({ info }: { info: ImageInfo }) {
         </a>
       </div>
       <div>
+        Size: {info.width} x {info.height} px
+      </div>
+      <div>
         Source:{" "}
         {source === "mapillary" ? (
           <a

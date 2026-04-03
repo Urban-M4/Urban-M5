@@ -35,7 +35,7 @@ export function ImagePanel() {
       <details>
         <summary>Information</summary>
         <div className="flex-row gap-2 flex">
-            <ImageMetaInfo info={imageInfo} />
+          <ImageMetaInfo info={imageInfo} />
           <div className="flex flex-col gap-1">
             <Tags
               tags={imageInfo.tags ?? []}
