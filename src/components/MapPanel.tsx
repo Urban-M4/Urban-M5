@@ -129,7 +129,7 @@ export function MapPanel() {
             <img
               src={hoverInfo.feature.properties.url}
               alt="Street view thumbnail"
-              className="w-32 h-32 object-cover rounded"
+              className="max-w-64 max-h-64 object-cover rounded"
             />
           </div>
         )}
