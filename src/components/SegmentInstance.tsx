@@ -5,7 +5,10 @@ import {
   useSegmentationActions,
 } from "@/hooks/streetscapes";
 import { Badge } from "@/components/ui/badge";
-import { useHoverSegmentationInstance } from "@/lib/store";
+import {
+  useAnnotationVisibility,
+  useHoverSegmentationInstance,
+} from "@/lib/store";
 import {
   ContextMenu,
   ContextMenuContent,
@@ -15,6 +18,7 @@ import {
   ContextMenuSubContent,
   ContextMenuSubTrigger,
   ContextMenuTrigger,
+  ContextMenuCheckboxItem,
 } from "./ui/context-menu";
 import { TrashIcon } from "lucide-react";
 
@@ -40,6 +44,7 @@ export function SegmentInstance({
   } = useHoverSegmentationInstance();
   const currentImageId = useCurrentImageId()[0];
   const { setSegmentLabel } = useSegmentationActions();
+  const { toggleLabel, hiddenLabels } = useAnnotationVisibility();
 
   const color = labels[instance.label as keyof typeof labels] || "#6b7280";
   const isHovered =
@@ -70,6 +75,14 @@ export function SegmentInstance({
         <ContextMenuItem variant="destructive">
           <TrashIcon /> Delete
         </ContextMenuItem>
+        <ContextMenuCheckboxItem
+          checked={!hiddenLabels.has(instance.label)}
+          onCheckedChange={() => {
+            toggleLabel(instance.label);
+          }}
+        >
+          Toggle visibility
+        </ContextMenuCheckboxItem>
         <ContextMenuSub>
           <ContextMenuSubTrigger>Re-label</ContextMenuSubTrigger>
           <ContextMenuSubContent>
