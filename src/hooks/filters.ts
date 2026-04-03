@@ -1,4 +1,9 @@
-import { parseAsArrayOf, parseAsString, useQueryStates } from "nuqs";
+import {
+  parseAsArrayOf,
+  parseAsString,
+  useQueryStates,
+  parseAsInteger,
+} from "nuqs";
 
 export function useFilters() {
   return useQueryStates(
@@ -9,6 +14,8 @@ export function useFilters() {
       min_captured_at: parseAsString,
       labels: parseAsArrayOf(parseAsString).withDefault([]),
       models: parseAsArrayOf(parseAsString).withDefault([]),
+      image_ratings: parseAsArrayOf(parseAsInteger).withDefault([]),
+      segmentation_ratings: parseAsArrayOf(parseAsInteger).withDefault([]),
     },
     {
       urlKeys: {
@@ -18,6 +25,8 @@ export function useFilters() {
         min_captured_at: "minc",
         labels: "l",
         models: "m",
+        image_ratings: "ir",
+        segmentation_ratings: "sr",
       },
     },
   );
