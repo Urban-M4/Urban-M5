@@ -21,6 +21,9 @@ type AnnotationVisibilityState = {
   hiddenLabels: Set<string>;
   toggleSegmentation: (segmentationId: string) => void;
   toggleLabel: (label: string) => void;
+  showAllLabels: () => void;
+  hideAllLabels: (labels: string[]) => void;
+  invertLabels: (labels: string[]) => void;
   showAllSegmentations: () => void;
   hideAllSegmentations: (segmentationIds: string[]) => void;
   getVisibilityState: () => {
@@ -50,6 +53,24 @@ export const useAnnotationVisibility = create<AnnotationVisibilityState>(
           newHidden.delete(label);
         } else {
           newHidden.add(label);
+        }
+        return { hiddenLabels: newHidden };
+      }),
+    showAllLabels: () =>
+      set({
+        hiddenLabels: new Set(),
+      }),
+    hideAllLabels: (labels: string[]) =>
+      set({
+        hiddenLabels: new Set(labels),
+      }),
+    invertLabels: (labels: string[]) =>
+      set((state) => {
+        const newHidden = new Set<string>();
+        for (const label of labels) {
+          if (!state.hiddenLabels.has(label)) {
+            newHidden.add(label);
+          }
         }
         return { hiddenLabels: newHidden };
       }),

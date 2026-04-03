@@ -5,13 +5,28 @@ import {
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { Button } from "./ui/button";
+import { CheckCheck, RefreshCw, SquareMinus } from "lucide-react";
 
 export function LabelVisibilityMenu() {
   const labels = useAllLabels();
-  const { hiddenLabels, toggleLabel } = useAnnotationVisibility();
+  const labelEntries = Object.entries(labels);
+  const labelNames = labelEntries.map(([label]) => label);
+  const {
+    hiddenLabels,
+    toggleLabel,
+    showAllLabels,
+    hideAllLabels,
+    invertLabels,
+  } = useAnnotationVisibility();
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
@@ -19,7 +34,25 @@ export function LabelVisibilityMenu() {
       ></DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuGroup>
-          {Object.entries(labels).map(([label, color]) => (
+          <DropdownMenuSub>
+            <DropdownMenuSubTrigger>Selection</DropdownMenuSubTrigger>
+            <DropdownMenuSubContent>
+              <DropdownMenuItem onClick={showAllLabels}>
+                <CheckCheck />
+                Select all
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => hideAllLabels(labelNames)}>
+                <SquareMinus />
+                Select none
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => invertLabels(labelNames)}>
+                <RefreshCw />
+                Invert selection
+              </DropdownMenuItem>
+            </DropdownMenuSubContent>
+          </DropdownMenuSub>
+          <DropdownMenuSeparator />
+          {labelEntries.map(([label, color]) => (
             <DropdownMenuCheckboxItem
               key={label}
               className="flex items-center justify-between"
