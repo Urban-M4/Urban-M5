@@ -205,6 +205,29 @@ function LabelToDraw({
   );
 }
 
+function HoverInfo({
+  activeHoveredAnnotation,
+}: {
+  activeHoveredAnnotation?: ImageAnnotation;
+}) {
+  return (
+    <div className="flex h-8 flex-1 items-center rounded-lg border border-border px-3">
+      {activeHoveredAnnotation ? (
+        <span className="w-full truncate text-sm">
+          {activeHoveredAnnotation.bodies
+            .filter((b) => b.purpose === "tagging")
+            .map((b) => String(b.value))
+            .join(", ")}
+        </span>
+      ) : (
+        <span className="text-sm text-muted-foreground">
+          Segmentation info on hover
+        </span>
+      )}
+    </div>
+  );
+}
+
 function RealAnnotatedImage({
   url,
   id,
@@ -221,7 +244,11 @@ function RealAnnotatedImage({
   const allLabels = useAllLabels();
   const annot = useAnnotator<AnnotoriousImageAnnotator>();
   const [drawLabel, setDrawLabel] = useState(Object.keys(allLabels)[0]);
+  const [isPointerInImageArea, setIsPointerInImageArea] = useState(false);
   const hoveredAnnotation = useHover();
+  const activeHoveredAnnotation = isPointerInImageArea
+    ? hoveredAnnotation
+    : undefined;
   const annotations = mapSegmentationsToAnnotations(segmentations);
   const {
     segmentationId: hoveredSegmentationId,
@@ -246,18 +273,18 @@ function RealAnnotatedImage({
   });
 
   useEffect(() => {
-    if (!hoveredAnnotation) {
+    if (!activeHoveredAnnotation) {
       clearHover();
       return;
     }
 
-    const parsed = parseAnnotationId(hoveredAnnotation.id);
+    const parsed = parseAnnotationId(activeHoveredAnnotation.id);
     if (parsed) {
       setHover(parsed.segmentationId, parsed.instanceIndex);
     } else {
       clearHover();
     }
-  }, [hoveredAnnotation, setHover, clearHover]);
+  }, [activeHoveredAnnotation, setHover, clearHover]);
 
   useEffect(() => {
     if (!annot) return;
@@ -323,9 +350,10 @@ function RealAnnotatedImage({
 
   return (
     <>
-      <div aria-label="Actions on image" className="flex gap-2">
+      <div aria-label="Actions on image" className="flex items-center gap-2">
         <LabelToDraw value={drawLabel} onChange={setDrawLabel} />
         <LabelVisibilityMenu />
+        <HoverInfo activeHoveredAnnotation={activeHoveredAnnotation} />
       </div>
       <OpenSeadragonAnnotator
         tool="polygon"
@@ -334,11 +362,19 @@ function RealAnnotatedImage({
         userSelectAction={UserSelectAction.EDIT}
         style={annotaterStyle}
       >
-        <OpenSeadragonViewer
-          key={id}
-          options={options}
-          className="w-full max-h-[50vh] h-[40vh] min-h-[12vh]"
-        />
+        <div
+          onMouseEnter={() => setIsPointerInImageArea(true)}
+          onMouseLeave={() => {
+            setIsPointerInImageArea(false);
+            clearHover();
+          }}
+        >
+          <OpenSeadragonViewer
+            key={id}
+            options={options}
+            className="w-full max-h-[50vh] h-[40vh] min-h-[12vh]"
+          />
+        </div>
       </OpenSeadragonAnnotator>
     </>
   );
