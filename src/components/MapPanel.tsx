@@ -4,6 +4,7 @@ import Map, {
   NavigationControl,
   ScaleControl,
   Source,
+  useMap,
   type MapGeoJSONFeature,
   type MapLayerMouseEvent,
   type MapRef,
@@ -13,6 +14,7 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import { useCurrentImageId, useImages } from "@/hooks/streetscapes";
 import { useTheme } from "@/components/theme-provider";
 import { useEffect, useRef, useState } from "react";
+import { ZoomToImagesControl } from "./ZoomToImagesControl";
 
 export function MapPanel() {
   const [currentImageId, setCurrentImageId] = useCurrentImageId();
@@ -101,6 +103,7 @@ export function MapPanel() {
       >
         <FullscreenControl position="top-left" />
         <NavigationControl position="top-left" />
+        <ZoomToImagesControl images={images} />
         <ScaleControl />
         <Source id="images" type="geojson" data={geojson}>
           <Layer
