@@ -4,6 +4,7 @@ import { Tags } from "@/components/Tags";
 import { Notes } from "@/components/Notes";
 import { Segmentations } from "@/components/Segmentations";
 import { AnnotatedImage } from "./AnnotatedImage";
+import { ImageMetaInfo } from "./ImageMetaInfo";
 
 export function ImagePanel() {
   const { data: imageInfo, isLoading, error } = useCurrentImageInfo();
@@ -31,37 +32,45 @@ export function ImagePanel() {
         width={imageInfo.width}
         segmentations={imageInfo.segmentation ?? []}
       />
-      <Tags
-        tags={imageInfo.tags ?? []}
-        onChange={(newTags: string[]) => {
-          actions.setTags({
-            params: { path: { image_id: imageInfo.id } },
-            body: newTags,
-          });
-        }}
-      />
-      <Rating
-        value={imageInfo.rating}
-        onChange={(value: number) => {
-          actions.setRating({
-            params: {
-              path: { image_id: imageInfo.id },
-              query: { rating: value },
-            },
-          });
-        }}
-      />
-      <Notes
-        value={imageInfo.notes}
-        onChange={(newNotes: string) => {
-          actions.setNotes({
-            params: {
-              path: { image_id: imageInfo.id },
-              query: { notes: newNotes },
-            },
-          });
-        }}
-      />
+      <details>
+        <summary>Information</summary>
+        <div className="flex-row gap-2 flex">
+            <ImageMetaInfo info={imageInfo} />
+          <div className="flex flex-col gap-1">
+            <Tags
+              tags={imageInfo.tags ?? []}
+              onChange={(newTags: string[]) => {
+                actions.setTags({
+                  params: { path: { image_id: imageInfo.id } },
+                  body: newTags,
+                });
+              }}
+            />
+            <Rating
+              value={imageInfo.rating}
+              onChange={(value: number) => {
+                actions.setRating({
+                  params: {
+                    path: { image_id: imageInfo.id },
+                    query: { rating: value },
+                  },
+                });
+              }}
+            />
+            <Notes
+              value={imageInfo.notes}
+              onChange={(newNotes: string) => {
+                actions.setNotes({
+                  params: {
+                    path: { image_id: imageInfo.id },
+                    query: { notes: newNotes },
+                  },
+                });
+              }}
+            />
+          </div>
+        </div>
+      </details>
       <Segmentations
         imageId={imageInfo.id}
         segmentations={imageInfo.segmentation ?? []}

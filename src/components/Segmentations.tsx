@@ -4,6 +4,7 @@ import { SegmentImage } from "@/components/SegmentImage";
 import { ToggleSegmentationButton } from "@/components/ToggleSegmentationButton";
 import { ToggleSegmentationsButton } from "@/components/ToggleSegmentationsButton";
 import { SegmentInstance } from "@/components/SegmentInstance";
+import { Rating } from "./rating";
 
 interface SegmentationsProps {
   imageId: string;
@@ -20,9 +21,10 @@ function SegmentationCard({ segmentation }: { segmentation: Segmentation }) {
         </div>
       </CardHeader>
       <CardContent className="flex flex-col gap-2">
-        <div className="text-sm text-muted-foreground">
+        <div className="text-sm">
           <span className="font-medium">Model:</span> {segmentation.model_name}
         </div>
+        <Rating value={0} onChange={() => console.log("Not implemented")} />
         {segmentation.run_args && (
           <details>
             <summary>Parameters</summary>
@@ -32,7 +34,7 @@ function SegmentationCard({ segmentation }: { segmentation: Segmentation }) {
           </details>
         )}
         {segmentation.notes && (
-          <div className="text-sm text-muted-foreground">
+          <div className="text-sm">
             <span className="font-medium">Notes:</span> {segmentation.notes}
           </div>
         )}
