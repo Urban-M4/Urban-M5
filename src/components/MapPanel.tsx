@@ -12,8 +12,11 @@ import "maplibre-gl/dist/maplibre-gl.css";
 
 import { useCurrentImageId, useImages } from "@/hooks/streetscapes";
 import { useTheme } from "@/components/theme-provider";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { ZoomToImagesControl } from "./ZoomToImagesControl";
+
+const selectedMarkerCololr = "#fd9a00"; // tailwind orange-500
+const unselectedMarkerColor = "#007cbf"; // tailwind sky-600
 
 export function MapPanel() {
   const [currentImageId, setCurrentImageId] = useCurrentImageId();
@@ -51,18 +54,6 @@ export function MapPanel() {
       },
     })),
   };
-
-  useEffect(() => {
-    if (!mapRef.current) return;
-    if (!mapRef.current.isStyleLoaded()) return;
-
-    images.forEach((image) => {
-      mapRef.current?.setFeatureState(
-        { source: "images", id: imageLookup[image.id] },
-        { selected: image.id === currentImageId },
-      );
-    });
-  }, [currentImageId, images, imageLookup]);
 
   function handleClick(event: MapLayerMouseEvent) {
     if (!mapRef.current) return;
@@ -110,14 +101,20 @@ export function MapPanel() {
             type="circle"
             paint={{
               "circle-radius": 8,
-              "circle-color": [
-                "case",
-                ["boolean", ["feature-state", "selected"], false],
-                "#007cbf",
-                "rgba(0,0,0,0)",
-              ],
+              "circle-color": "rgba(0,0,0,0)",
               "circle-stroke-width": 8,
-              "circle-stroke-color": "#007cbf",
+              "circle-stroke-color": unselectedMarkerColor,
+            }}
+          />
+          <Layer
+            id="images-selected"
+            type="circle"
+            filter={["==", ["get", "id"], currentImageId ?? ""]}
+            paint={{
+              "circle-radius": 8,
+              "circle-color": selectedMarkerCololr,
+              "circle-stroke-width": 8,
+              "circle-stroke-color": selectedMarkerCololr,
             }}
           />
         </Source>
