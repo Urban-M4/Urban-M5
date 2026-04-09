@@ -32,7 +32,7 @@ function SegmentationCard({ segmentation }: { segmentation: Segmentation }) {
         </div>
         <Rating
           // TODO server does not return rating yet, see https://github.com/Urban-M4/streetscapes/issues/147
-          value={0} 
+          value={0}
           onChange={(value) =>
             setSegmentationRating({
               params: {

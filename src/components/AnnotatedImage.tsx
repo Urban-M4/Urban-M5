@@ -298,6 +298,7 @@ function RealAnnotatedImage({
         run_args: "",
         instances: [],
         notes: "",
+        rating: 0,
       };
       const manualSegmentation =
         segmentations.find((s) => s.model_name === "manual") ??
