@@ -4,675 +4,686 @@
  */
 
 export interface paths {
-  "/": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Root
+         * @description Server root.
+         */
+        get: operations["root__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /**
-     * Root
-     * @description Server root.
-     */
-    get: operations["root__get"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/project": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/project": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Project
+         * @description Get the active project name.
+         */
+        get: operations["project_project_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /**
-     * Project
-     * @description Get the active project name.
-     */
-    get: operations["project_project_get"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/stats": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/stats": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Fetch Stats
+         * @description Get the aggregate stats of the images.
+         */
+        get: operations["fetch_stats_stats_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /**
-     * Fetch Stats
-     * @description Get the aggregate stats of the images.
-     */
-    get: operations["fetch_stats_stats_get"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/images": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/images": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Fetch Images
+         * @description Fetch streetscape images corresponding to a bounding box and optionally filters.
+         */
+        get: operations["fetch_images_images_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /**
-     * Fetch Images
-     * @description Fetch streetscape images corresponding to a bounding box and optionally filters.
-     */
-    get: operations["fetch_images_images_get"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/images/{image_id}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/images/{image_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Fetch Image Metadata
+         * @description Get all metadata associated with a certain image, including segmentations.
+         */
+        get: operations["fetch_image_metadata_images__image_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /**
-     * Fetch Image Metadata
-     * @description Get all metadata associated with a certain image, including segmentations.
-     */
-    get: operations["fetch_image_metadata_images__image_id__get"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/images/{image_id}/rating": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/images/{image_id}/rating": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Set Rating
+         * @description Set an image's rating.
+         */
+        post: operations["set_rating_images__image_id__rating_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    /**
-     * Set Rating
-     * @description Set an image's rating.
-     */
-    post: operations["set_rating_images__image_id__rating_post"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/images/{image_id}/tags": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/images/{image_id}/tags": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Set Tags
+         * @description Set an image's tags.
+         */
+        post: operations["set_tags_images__image_id__tags_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    /**
-     * Set Tags
-     * @description Set an image's tags.
-     */
-    post: operations["set_tags_images__image_id__tags_post"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/images/{image_id}/notes": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/images/{image_id}/notes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Set Notes
+         * @description Set an image's notes.
+         */
+        post: operations["set_notes_images__image_id__notes_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    /**
-     * Set Notes
-     * @description Set an image's notes.
-     */
-    post: operations["set_notes_images__image_id__notes_post"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/images/{image_id}/{run_name}/rating": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/images/{image_id}/{run_name}/rating": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Set Segmentation Rating
+         * @description Rate an image's segmentation.
+         */
+        post: operations["set_segmentation_rating_images__image_id___run_name__rating_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    /**
-     * Set Segmentation Rating
-     * @description Rate an image's segmentation.
-     */
-    post: operations["set_segmentation_rating_images__image_id___run_name__rating_post"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/images/{image_id}/{run_name}/{instance_idx}/{label}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/images/{image_id}/{run_name}/{instance_idx}/{label}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Set Instance Label
+         * @description Set the label of a specific instance within a segmentation.
+         */
+        post: operations["set_instance_label_images__image_id___run_name___instance_idx___label__post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    /**
-     * Set Instance Label
-     * @description Set the label of a specific instance within a segmentation.
-     */
-    post: operations["set_instance_label_images__image_id___run_name___instance_idx___label__post"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/images/{image_id}/segment/{model}/{run_args}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/images/{image_id}/segment/{model}/{run_args}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Segment Image
+         * @description Compute a new segmentation of an image.
+         */
+        post: operations["segment_image_images__image_id__segment__model___run_args__post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    /**
-     * Segment Image
-     * @description Compute a new segmentation of an image.
-     */
-    post: operations["segment_image_images__image_id__segment__model___run_args__post"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
 }
 export type webhooks = Record<string, never>;
 export interface components {
-  schemas: {
-    /** AggregateStats */
-    AggregateStats: {
-      /** Tags */
-      tags: string[];
-      /** Labels */
-      labels: string[];
-      /** Model Run Names */
-      model_run_names: string[];
-      /** Image Sources */
-      image_sources: string[];
-      /** Date Range */
-      date_range: [string, string];
-      /** Models */
-      models: string[];
+    schemas: {
+        /** AggregateStats */
+        AggregateStats: {
+            /** Tags */
+            tags: string[];
+            /** Labels */
+            labels: string[];
+            /** Model Run Names */
+            model_run_names: string[];
+            /** Image Sources */
+            image_sources: string[];
+            /** Date Range */
+            date_range: [
+                string,
+                string
+            ];
+            /** Models */
+            models: string[];
+        };
+        /** HTTPValidationError */
+        HTTPValidationError: {
+            /** Detail */
+            detail?: components["schemas"]["ValidationError"][];
+        };
+        /** Image */
+        Image: {
+            /** Id */
+            id: string;
+            /** Url */
+            url: string;
+            /** Lat */
+            lat: number;
+            /** Lon */
+            lon: number;
+        };
+        /** ImageMetadata */
+        ImageMetadata: {
+            /** Id */
+            id: string;
+            /** Url */
+            url: string;
+            /** Lat */
+            lat: number;
+            /** Lon */
+            lon: number;
+            /** Width */
+            width: number;
+            /** Height */
+            height: number;
+            /** Altitude */
+            altitude?: number | null;
+            /** Captured At */
+            captured_at?: string | null;
+            /** Panoramic */
+            panoramic?: number | null;
+            /** Source */
+            source?: string | null;
+            /** Tags */
+            tags?: string[];
+            /** Rating */
+            rating?: number | null;
+            /** Compass Angle */
+            compass_angle?: number | null;
+            /**
+             * Notes
+             * @default
+             */
+            notes: string;
+            /** Segmentation */
+            segmentation?: components["schemas"]["Segmentation"][];
+        };
+        /** Instance */
+        Instance: {
+            /** Label */
+            label: string;
+            /** Polygon */
+            polygon?: [
+                number,
+                number
+            ][][];
+        };
+        /** Segmentation */
+        Segmentation: {
+            /** Model Name */
+            model_name: string;
+            /** Id */
+            id: string;
+            /** Run Args */
+            run_args: string;
+            /** Rating */
+            rating: number;
+            /** Instances */
+            instances?: components["schemas"]["Instance"][];
+            /**
+             * Notes
+             * @default
+             */
+            notes: string;
+        };
+        /** ValidationError */
+        ValidationError: {
+            /** Location */
+            loc: (string | number)[];
+            /** Message */
+            msg: string;
+            /** Error Type */
+            type: string;
+            /** Input */
+            input?: unknown;
+            /** Context */
+            ctx?: Record<string, never>;
+        };
     };
-    /** HTTPValidationError */
-    HTTPValidationError: {
-      /** Detail */
-      detail?: components["schemas"]["ValidationError"][];
-    };
-    /** Image */
-    Image: {
-      /** Id */
-      id: string;
-      /** Url */
-      url: string;
-      /** Lat */
-      lat: number;
-      /** Lon */
-      lon: number;
-    };
-    /** ImageMetadata */
-    ImageMetadata: {
-      /** Id */
-      id: string;
-      /** Url */
-      url: string;
-      /** Lat */
-      lat: number;
-      /** Lon */
-      lon: number;
-      /** Width */
-      width: number;
-      /** Height */
-      height: number;
-      /** Altitude */
-      altitude?: number | null;
-      /** Captured At */
-      captured_at?: string | null;
-      /** Panoramic */
-      panoramic?: number | null;
-      /** Source */
-      source?: string | null;
-      /** Tags */
-      tags?: string[];
-      /** Rating */
-      rating?: number | null;
-      /** Compass Angle */
-      compass_angle?: number | null;
-      /**
-       * Notes
-       * @default
-       */
-      notes: string;
-      /** Segmentation */
-      segmentation?: components["schemas"]["Segmentation"][];
-    };
-    /** Instance */
-    Instance: {
-      /** Label */
-      label: string;
-      /** Polygon */
-      polygon?: [number, number][][];
-    };
-    /** Segmentation */
-    Segmentation: {
-      /** Model Name */
-      model_name: string;
-      /** Id */
-      id: string;
-      /** Run Args */
-      run_args: string;
-      /** Instances */
-      instances?: components["schemas"]["Instance"][];
-      /**
-       * Notes
-       * @default
-       */
-      notes: string;
-    };
-    /** ValidationError */
-    ValidationError: {
-      /** Location */
-      loc: (string | number)[];
-      /** Message */
-      msg: string;
-      /** Error Type */
-      type: string;
-      /** Input */
-      input?: unknown;
-      /** Context */
-      ctx?: Record<string, never>;
-    };
-  };
-  responses: never;
-  parameters: never;
-  requestBodies: never;
-  headers: never;
-  pathItems: never;
+    responses: never;
+    parameters: never;
+    requestBodies: never;
+    headers: never;
+    pathItems: never;
 }
 export type $defs = Record<string, never>;
 export interface operations {
-  root__get: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    root__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
     };
-    requestBody?: never;
-    responses: {
-      /** @description Successful Response */
-      200: {
-        headers: {
-          [name: string]: unknown;
+    project_project_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-        content: {
-          "application/json": unknown;
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
         };
-      };
     };
-  };
-  project_project_get: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    fetch_stats_stats_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AggregateStats"];
+                };
+            };
+        };
     };
-    requestBody?: never;
-    responses: {
-      /** @description Successful Response */
-      200: {
-        headers: {
-          [name: string]: unknown;
+    fetch_images_images_get: {
+        parameters: {
+            query?: {
+                n?: number;
+                e?: number;
+                s?: number;
+                w?: number;
+                image_ratings?: number[];
+                sources?: string[];
+                tags?: string[];
+                date_range?: [
+                    string,
+                    string
+                ];
+                models?: string[];
+                model_runs?: string[];
+                labels?: string[];
+                segmentation_ratings?: number[];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-        content: {
-          "application/json": unknown;
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Image"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
         };
-      };
     };
-  };
-  fetch_stats_stats_get: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    fetch_image_metadata_images__image_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                image_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ImageMetadata"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
     };
-    requestBody?: never;
-    responses: {
-      /** @description Successful Response */
-      200: {
-        headers: {
-          [name: string]: unknown;
+    set_rating_images__image_id__rating_post: {
+        parameters: {
+            query: {
+                rating: number;
+            };
+            header?: never;
+            path: {
+                image_id: string;
+            };
+            cookie?: never;
         };
-        content: {
-          "application/json": components["schemas"]["AggregateStats"];
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
         };
-      };
     };
-  };
-  fetch_images_images_get: {
-    parameters: {
-      query?: {
-        n?: number;
-        e?: number;
-        s?: number;
-        w?: number;
-        image_ratings?: number[];
-        sources?: string[];
-        tags?: string[];
-        date_range?: [string, string];
-        models?: string[];
-        model_runs?: string[];
-        labels?: string[];
-        segmentation_ratings?: number[];
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
+    set_tags_images__image_id__tags_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                image_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": string[];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
     };
-    requestBody?: never;
-    responses: {
-      /** @description Successful Response */
-      200: {
-        headers: {
-          [name: string]: unknown;
+    set_notes_images__image_id__notes_post: {
+        parameters: {
+            query: {
+                notes: string;
+            };
+            header?: never;
+            path: {
+                image_id: string;
+            };
+            cookie?: never;
         };
-        content: {
-          "application/json": components["schemas"]["Image"][];
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
         };
-      };
-      /** @description Validation Error */
-      422: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["HTTPValidationError"];
-        };
-      };
     };
-  };
-  fetch_image_metadata_images__image_id__get: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        image_id: string;
-      };
-      cookie?: never;
+    set_segmentation_rating_images__image_id___run_name__rating_post: {
+        parameters: {
+            query: {
+                rating: number;
+            };
+            header?: never;
+            path: {
+                image_id: string;
+                run_name: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
     };
-    requestBody?: never;
-    responses: {
-      /** @description Successful Response */
-      200: {
-        headers: {
-          [name: string]: unknown;
+    set_instance_label_images__image_id___run_name___instance_idx___label__post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                image_id: string;
+                run_name: string;
+                instance_idx: number;
+                label: string;
+            };
+            cookie?: never;
         };
-        content: {
-          "application/json": components["schemas"]["ImageMetadata"];
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
         };
-      };
-      /** @description Validation Error */
-      422: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["HTTPValidationError"];
-        };
-      };
     };
-  };
-  set_rating_images__image_id__rating_post: {
-    parameters: {
-      query: {
-        rating: number;
-      };
-      header?: never;
-      path: {
-        image_id: string;
-      };
-      cookie?: never;
+    segment_image_images__image_id__segment__model___run_args__post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                image_id: unknown;
+                model: unknown;
+                run_args: unknown;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
     };
-    requestBody?: never;
-    responses: {
-      /** @description Successful Response */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": unknown;
-        };
-      };
-      /** @description Validation Error */
-      422: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["HTTPValidationError"];
-        };
-      };
-    };
-  };
-  set_tags_images__image_id__tags_post: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        image_id: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": string[];
-      };
-    };
-    responses: {
-      /** @description Successful Response */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": unknown;
-        };
-      };
-      /** @description Validation Error */
-      422: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["HTTPValidationError"];
-        };
-      };
-    };
-  };
-  set_notes_images__image_id__notes_post: {
-    parameters: {
-      query: {
-        notes: string;
-      };
-      header?: never;
-      path: {
-        image_id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Successful Response */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": unknown;
-        };
-      };
-      /** @description Validation Error */
-      422: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["HTTPValidationError"];
-        };
-      };
-    };
-  };
-  set_segmentation_rating_images__image_id___run_name__rating_post: {
-    parameters: {
-      query: {
-        rating: number;
-      };
-      header?: never;
-      path: {
-        image_id: string;
-        run_name: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Successful Response */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": unknown;
-        };
-      };
-      /** @description Validation Error */
-      422: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["HTTPValidationError"];
-        };
-      };
-    };
-  };
-  set_instance_label_images__image_id___run_name___instance_idx___label__post: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        image_id: string;
-        run_name: string;
-        instance_idx: number;
-        label: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Successful Response */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": unknown;
-        };
-      };
-      /** @description Validation Error */
-      422: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["HTTPValidationError"];
-        };
-      };
-    };
-  };
-  segment_image_images__image_id__segment__model___run_args__post: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        image_id: unknown;
-        model: unknown;
-        run_args: unknown;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Successful Response */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": unknown;
-        };
-      };
-      /** @description Validation Error */
-      422: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["HTTPValidationError"];
-        };
-      };
-    };
-  };
 }
