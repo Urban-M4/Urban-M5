@@ -1,3 +1,4 @@
+import { renderToStaticMarkup } from "react-dom/server";
 import {
   type Instance,
   type Segmentation,
@@ -36,6 +37,13 @@ import {
 } from "./ui/select";
 import { LabelVisibilityMenu } from "./LabelVisibilityMenu";
 import type { Options } from "openseadragon";
+import {
+  FullscreenIcon,
+  HouseIcon,
+  ZoomInIcon,
+  ZoomOutIcon,
+} from "lucide-react";
+import { useTheme } from "./theme-provider";
 
 export function AnnotatedImage({
   id,
@@ -230,6 +238,69 @@ function HoverInfo({
   );
 }
 
+function useNavImages(): Options["navImages"] {
+  const { isDarkMode } = useTheme();
+
+  const iconToDataUri = (icon: React.ReactElement) => {
+    const svg = renderToStaticMarkup(icon);
+    return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
+  };
+
+  const navImage = ({
+    rest,
+    hover,
+    down,
+  }: {
+    rest: React.ReactElement;
+    hover: React.ReactElement;
+    down: React.ReactElement;
+  }) => ({
+    REST: iconToDataUri(rest),
+    GROUP: iconToDataUri(rest),
+    HOVER: iconToDataUri(hover),
+    DOWN: iconToDataUri(down),
+  });
+
+  const restColor = isDarkMode ? "oklch(0.985 0 0)" : "oklch(0.145 0 0)";
+  const hoverColor = "#fd9a00"; // Same accent as map
+  const downColor = "#fd9a00";
+  const size = 25;
+
+  const zoomInNavImage = navImage({
+    rest: <ZoomInIcon size={size} strokeWidth={2} stroke={restColor} />,
+    hover: <ZoomInIcon size={size} strokeWidth={2} stroke={hoverColor} />,
+    down: <ZoomInIcon size={size} strokeWidth={2} stroke={downColor} />,
+  });
+  const zoomOutNavImage = navImage({
+    rest: <ZoomOutIcon size={size} strokeWidth={2} stroke={restColor} />,
+    hover: <ZoomOutIcon size={size} strokeWidth={2} stroke={hoverColor} />,
+    down: <ZoomOutIcon size={size} strokeWidth={2} stroke={downColor} />,
+  });
+  const homeNavImage = navImage({
+    rest: <HouseIcon size={size} strokeWidth={2} stroke={restColor} />,
+    hover: <HouseIcon size={size} strokeWidth={2} stroke={hoverColor} />,
+    down: <HouseIcon size={size} strokeWidth={2} stroke={downColor} />,
+  });
+  const fullNavImage = navImage({
+    rest: <FullscreenIcon size={size} strokeWidth={2} stroke={restColor} />,
+    hover: <FullscreenIcon size={size} strokeWidth={2} stroke={hoverColor} />,
+    down: <FullscreenIcon size={size} strokeWidth={2} stroke={downColor} />,
+  });
+
+  const navImages = {
+    zoomIn: zoomInNavImage,
+    zoomOut: zoomOutNavImage,
+    home: homeNavImage,
+    fullpage: fullNavImage,
+    rotateleft: homeNavImage,
+    rotateright: homeNavImage,
+    flip: homeNavImage,
+    previous: homeNavImage,
+    next: homeNavImage,
+  };
+  return navImages;
+}
+
 function RealAnnotatedImage({
   url,
   id,
@@ -338,6 +409,7 @@ function RealAnnotatedImage({
     return style;
   };
 
+  const navImages = useNavImages();
   const options: Options = {
     tileSources: {
       type: "image",
@@ -347,8 +419,8 @@ function RealAnnotatedImage({
     },
     maxZoomPixelRatio: 8,
     drawer: "canvas",
-    // TODO use/create icons that match esthetics of rest of app
-    prefixUrl: "http://openseadragon.github.io/openseadragon/images/",
+    prefixUrl: "",
+    navImages,
   };
 
   return (
@@ -375,7 +447,7 @@ function RealAnnotatedImage({
           <OpenSeadragonViewer
             key={id}
             options={options}
-            className="w-full max-h-[50vh] h-[40vh] min-h-[12vh]"
+            className="w-full h-[50vh] min-h-[12vh]"
           />
         </div>
       </OpenSeadragonAnnotator>
