@@ -89,6 +89,7 @@ export function SegmentInstance({
             <ContextMenuGroup>
               {Object.entries(labels)
                 .filter(([label]) => label !== instance.label)
+                .toSorted(([a], [b]) => a.localeCompare(b))
                 .map(([label, color]) => (
                   <ContextMenuItem
                     key={label}
