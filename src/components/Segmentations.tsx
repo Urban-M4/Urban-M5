@@ -27,42 +27,47 @@ function SegmentationCard({ segmentation }: { segmentation: Segmentation }) {
         </div>
       </CardHeader>
       <CardContent className="flex flex-col gap-2">
-        <div className="text-sm">
-          <span className="font-medium">Model:</span> {segmentation.model_name}
-        </div>
-        <Rating
-          value={segmentation.rating}
-          onChange={(value) =>
-            setSegmentationRating({
-              params: {
-                query: { rating: value },
-                path: {
-                  image_id: image_id,
-                  run_name: segmentation.id,
-                },
-              },
-            })
-          }
-        />
-        {segmentation.run_args && (
-          <details>
-            <summary>Parameters</summary>
-            <pre>
-              <code>
-                {JSON.stringify(JSON.parse(segmentation.run_args), null, 2)}
-              </code>
-            </pre>
-          </details>
-        )}
-        {segmentation.notes && (
+        <div className="flex flex-row gap-4">
           <div className="text-sm">
-            <span className="font-medium">Notes:</span> {segmentation.notes}
+            <span className="text-sm font-medium">Model:</span>{" "}
+            {segmentation.model_name}
           </div>
-        )}
+          <Rating
+            value={segmentation.rating}
+            onChange={(value) =>
+              setSegmentationRating({
+                params: {
+                  query: { rating: value },
+                  path: {
+                    image_id: image_id,
+                    run_name: segmentation.id,
+                  },
+                },
+              })
+            }
+          />
+          {segmentation.run_args && (
+            <details>
+              <summary title="View parameters (click to expand)">
+                Parameters
+              </summary>
+              <pre>
+                <code>
+                  {JSON.stringify(JSON.parse(segmentation.run_args), null, 2)}
+                </code>
+              </pre>
+            </details>
+          )}
+          {segmentation.notes && (
+            <div className="text-sm">
+              <span className="font-medium">Notes:</span> {segmentation.notes}
+            </div>
+          )}
+        </div>
         {segmentation.instances && (
           <div className="flex flex-col gap-2">
-            <span className="text-sm font-medium">Instances:</span>
             <div className="flex flex-wrap gap-2">
+              <span className="text-sm font-medium">Instances:</span>
               {segmentation.instances.map((instance, instanceIndex) => (
                 <SegmentInstance
                   key={instanceIndex}
