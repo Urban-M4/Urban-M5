@@ -20,7 +20,7 @@ const unselectedMarkerColor = "#007cbf"; // tailwind sky-600
 
 export function MapPanel() {
   const [currentImageId, setCurrentImageId] = useCurrentImageId();
-  const { theme } = useTheme();
+  const { isDarkMode } = useTheme();
   const mapRef = useRef<MapRef | null>(null);
   const { data: images = [] } = useImages();
   const [hoverInfo, setHoverInfo] = useState<{
@@ -29,10 +29,9 @@ export function MapPanel() {
     y: number;
   } | null>(null);
 
-  const mapStyle =
-    theme === "dark"
-      ? "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
-      : "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json";
+  const mapStyle = isDarkMode
+    ? "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
+    : "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json";
 
   // MapLibre forces id to number, while image id are strings
   const imageLookup: Record<string, number> = Object.fromEntries(
