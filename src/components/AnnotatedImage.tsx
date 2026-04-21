@@ -443,11 +443,13 @@ function RealAnnotatedImage({
             setIsPointerInImageArea(false);
             clearHover();
           }}
+          className="w-full"
+          style={{ aspectRatio: `${width} / ${height}` }}
         >
           <OpenSeadragonViewer
             key={id}
             options={options}
-            className="w-full h-[50vh] min-h-[12vh]"
+            className="size-full"
           />
         </div>
       </OpenSeadragonAnnotator>
