@@ -3,11 +3,17 @@ import {
   useSegmentationActions,
   type Segmentation,
 } from "@/hooks/streetscapes";
+import {
+  SegmentInstanceSortButton,
+  type SegmentationsSortMode,
+  useSortedInstances,
+} from "@/components/SegmentInstanceSortButton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SegmentImage } from "@/components/SegmentImage";
 import { ToggleSegmentationButton } from "@/components/ToggleSegmentationButton";
 import { ToggleSegmentationsButton } from "@/components/ToggleSegmentationsButton";
 import { SegmentInstance } from "@/components/SegmentInstance";
+import { useState } from "react";
 import { Rating } from "./rating";
 
 interface SegmentationsProps {
@@ -15,9 +21,17 @@ interface SegmentationsProps {
   segmentations: Segmentation[];
 }
 
-function SegmentationCard({ segmentation }: { segmentation: Segmentation }) {
+function SegmentationCard({
+  segmentation,
+  sortMode,
+}: {
+  segmentation: Segmentation;
+  sortMode: SegmentationsSortMode;
+}) {
   const { setSegmentationRating } = useSegmentationActions();
   const image_id = useCurrentImageId()[0]!;
+  const sortedInstances = useSortedInstances(segmentation.instances, sortMode);
+
   return (
     <Card>
       <CardHeader>
@@ -68,7 +82,7 @@ function SegmentationCard({ segmentation }: { segmentation: Segmentation }) {
           <div className="flex flex-col gap-2">
             <div className="flex flex-wrap gap-2">
               <span className="text-sm font-medium">Instances:</span>
-              {segmentation.instances.map((instance, instanceIndex) => (
+              {sortedInstances.map(({ instance, instanceIndex }) => (
                 <SegmentInstance
                   key={instanceIndex}
                   instance={instance}
@@ -86,6 +100,7 @@ function SegmentationCard({ segmentation }: { segmentation: Segmentation }) {
 }
 
 export function Segmentations({ imageId, segmentations }: SegmentationsProps) {
+  const [sortMode, setSortMode] = useState<SegmentationsSortMode>("label");
   const allSegmentationIds = segmentations.map((s) => s.id);
 
   const header = (
@@ -96,6 +111,7 @@ export function Segmentations({ imageId, segmentations }: SegmentationsProps) {
         aria-label="Actions on segmentations"
       >
         <ToggleSegmentationsButton allSegmentationIds={allSegmentationIds} />
+        <SegmentInstanceSortButton mode={sortMode} onChange={setSortMode} />
         <SegmentImage imageId={imageId} />
       </div>
     </div>
@@ -117,7 +133,11 @@ export function Segmentations({ imageId, segmentations }: SegmentationsProps) {
       {header}
       <div className="flex flex-col gap-3">
         {segmentations.map((segmentation, index) => (
-          <SegmentationCard key={index} segmentation={segmentation} />
+          <SegmentationCard
+            key={index}
+            segmentation={segmentation}
+            sortMode={sortMode}
+          />
         ))}
       </div>
     </div>
