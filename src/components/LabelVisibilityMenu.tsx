@@ -32,7 +32,7 @@ export function LabelVisibilityMenu() {
       <DropdownMenuTrigger
         render={<Button variant="outline">Label visibility</Button>}
       ></DropdownMenuTrigger>
-      <DropdownMenuContent>
+      <DropdownMenuContent className="w-auto min-w-max">
         <DropdownMenuGroup>
           <DropdownMenuSub>
             <DropdownMenuSubTrigger>Selection</DropdownMenuSubTrigger>
@@ -52,22 +52,24 @@ export function LabelVisibilityMenu() {
             </DropdownMenuSubContent>
           </DropdownMenuSub>
           <DropdownMenuSeparator />
-          {labelEntries.map(([label, color]) => (
-            <DropdownMenuCheckboxItem
-              key={label}
-              className="flex items-center justify-between"
-              checked={!hiddenLabels.has(label)}
-              onCheckedChange={() => toggleLabel(label)}
-            >
-              <span className="flex items-center gap-2">
-                <span
-                  className="inline-block w-3 h-3 rounded-sm"
-                  style={{ backgroundColor: color }}
-                ></span>
-                {label}
-              </span>
-            </DropdownMenuCheckboxItem>
-          ))}
+          {labelEntries
+            .toSorted(([a], [b]) => a.localeCompare(b))
+            .map(([label, color]) => (
+              <DropdownMenuCheckboxItem
+                key={label}
+                className="flex items-center justify-between"
+                checked={!hiddenLabels.has(label)}
+                onCheckedChange={() => toggleLabel(label)}
+              >
+                <span className="flex items-center gap-2 whitespace-nowrap">
+                  <span
+                    className="inline-block w-3 h-3 rounded-sm"
+                    style={{ backgroundColor: color }}
+                  ></span>
+                  {label}
+                </span>
+              </DropdownMenuCheckboxItem>
+            ))}
         </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
