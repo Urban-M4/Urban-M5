@@ -31,8 +31,7 @@ function SegmentationCard({ segmentation }: { segmentation: Segmentation }) {
           <span className="font-medium">Model:</span> {segmentation.model_name}
         </div>
         <Rating
-          // TODO server does not return rating yet, see https://github.com/Urban-M4/streetscapes/issues/147
-          value={0}
+          value={segmentation.rating}
           onChange={(value) =>
             setSegmentationRating({
               params: {
@@ -49,7 +48,9 @@ function SegmentationCard({ segmentation }: { segmentation: Segmentation }) {
           <details>
             <summary>Parameters</summary>
             <pre>
-              <code>{segmentation.run_args}</code>
+              <code>
+                {JSON.stringify(JSON.parse(segmentation.run_args), null, 2)}
+              </code>
             </pre>
           </details>
         )}
