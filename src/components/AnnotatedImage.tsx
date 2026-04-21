@@ -223,7 +223,7 @@ function HoverInfo({
         </span>
       ) : (
         <span className="text-sm text-muted-foreground">
-          Segmentation info on hover
+          Shows segmentation label on image hover
         </span>
       )}
     </div>
