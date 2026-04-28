@@ -84,7 +84,7 @@ function About() {
           <h3 className="font-semibold text-sm">Resources</h3>
           <div className="flex flex-col gap-2">
             <a
-              href="https://github.com/Urban-M4/Urban-M5"
+              href="https://github.com/Urban-M4/streetscapes-explorer"
               target="_blank"
               rel="noopener noreferrer"
               className="text-sm text-blue-600 hover:underline"
