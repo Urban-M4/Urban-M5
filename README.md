@@ -2,7 +2,7 @@
 
 [![Quality Checks](https://github.com/Urban-M4/streetscapes-explorer/actions/workflows/quality.yml/badge.svg)](https://github.com/Urban-M4/streetscapes-explorer/actions/workflows/quality.yml)
 
-Web application to look at and change [streetscapes](https://github.com/stefanv/streetscapes) data.
+Web application to look at and change [streetscapes](https://github.com/Urban-M4/streetscapes) data.
 
 Hosted at [https://urban-m4.github.io/streetscapes-explorer/](https://urban-m4.github.io/streetscapes-explorer/).
 
