@@ -1,6 +1,8 @@
 # streetscapes-explorer
 
 [![Quality Checks](https://github.com/Urban-M4/streetscapes-explorer/actions/workflows/quality.yml/badge.svg)](https://github.com/Urban-M4/streetscapes-explorer/actions/workflows/quality.yml)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19853272.svg)](https://doi.org/10.5281/zenodo.19853272)
+[![Research Software Directory Badge](https://img.shields.io/badge/rsd-00a3e3.svg)](https://research-software-directory.org/software/streetscapes-explorer)
 
 Web application to look at and change [streetscapes](https://github.com/Urban-M4/streetscapes) data.
 
