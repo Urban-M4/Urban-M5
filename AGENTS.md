@@ -1,4 +1,4 @@
-# Urban-M5
+# streetscapes-explorer
 
 Web application to look at and change [streetscapes](https://github.com/stefanv/streetscapes) data.
 

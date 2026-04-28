@@ -376,7 +376,7 @@ function RealAnnotatedImage({
         defaultManualSegmentation;
       manualSegmentation.instances!.push(mapAnnotationToInstance(drawLabel, a));
       console.log(JSON.stringify(manualSegmentation, undefined, 2));
-      // TODO write to server, see https://github.com/Urban-M4/Urban-M5/issues/4
+      // TODO write to server, see https://github.com/Urban-M4/streetscapes-explorer/issues/4
     }
     return () => {
       annot.off("createAnnotation", annotationCreated);
