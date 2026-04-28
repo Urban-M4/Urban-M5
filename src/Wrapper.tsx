@@ -18,8 +18,8 @@ export function Wrapper() {
         <div className="flex flex-row gap-2 items-center">
           <div>
             Use{" "}
-            <a href="?s=http://localhost:5000" className="underline">
-              http://localhost:5000
+            <a href="?s=http://localhost:5001" className="underline">
+              http://localhost:5001
             </a>{" "}
             or
           </div>
@@ -27,7 +27,7 @@ export function Wrapper() {
             <Input
               type="text"
               name="s"
-              placeholder="http://localhost:5000"
+              placeholder="http://localhost:5001"
               required
             />
             <Button type="submit">Submit</Button>

@@ -3,6 +3,7 @@ import {
   useAllLabels,
   useAllSources,
   useAllModels,
+  useAllModelRunNames,
 } from "../hooks/streetscapes";
 import { Label } from "./ui/label";
 import {
@@ -26,9 +27,11 @@ import {
   SidebarGroup,
   SidebarGroupLabel,
   SidebarGroupContent,
+  SidebarSeparator,
 } from "./ui/sidebar";
 import { SegmentImages } from "./SegmentImages";
 import { useFilters } from "@/hooks/filters";
+import { RatingFilter } from "./RatingFilter";
 
 export function Filters() {
   const [filters, setFilters] = useFilters();
@@ -37,6 +40,7 @@ export function Filters() {
   const tags = useAllTags();
   const labels = useAllLabels();
   const models = useAllModels();
+  const runNames = useAllModelRunNames();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -47,6 +51,18 @@ export function Filters() {
     setFilters({ [name]: value });
   };
 
+  const handleRatingToggle = (
+    name: "image_ratings" | "segmentation_ratings",
+    rating: number,
+  ) => {
+    const currentValues = filters[name] ?? [];
+    const nextValues = currentValues.includes(rating)
+      ? currentValues.filter((value) => value !== rating)
+      : [...currentValues, rating].sort((a, b) => a - b);
+
+    setFilters({ [name]: nextValues });
+  };
+
   const handleReset = () => {
     setFilters({
       sources: [],
@@ -55,6 +71,9 @@ export function Filters() {
       min_captured_at: null,
       labels: [],
       models: [],
+      model_runs: [],
+      image_ratings: [],
+      segmentation_ratings: [],
     });
   };
 
@@ -63,11 +82,15 @@ export function Filters() {
     filters.tags.length > 0 ||
     filters.labels.length > 0 ||
     filters.models.length > 0 ||
+    filters.model_runs.length > 0 ||
+    filters.image_ratings.length > 0 ||
+    filters.segmentation_ratings.length > 0 ||
     filters.max_captured_at ||
     filters.min_captured_at;
 
   return (
     <>
+      {/* Image level filters */}
       <SidebarGroup>
         <SidebarGroupLabel>Sources</SidebarGroupLabel>
         <SidebarGroupContent>
@@ -132,6 +155,42 @@ export function Filters() {
           </Combobox>
         </SidebarGroupContent>
       </SidebarGroup>
+      <RatingFilter
+        title="Image Ratings"
+        values={filters.image_ratings}
+        onToggle={(rating) => handleRatingToggle("image_ratings", rating)}
+      />
+      <SidebarSeparator />
+      {/* Metadata level filters */}
+      <SidebarGroup>
+        <SidebarGroupLabel>Captured At</SidebarGroupLabel>
+        <SidebarGroupContent>
+          <div className="space-y-2 ml-4">
+            <div>
+              <Label className="mb-1 text-sm">From:</Label>
+              <Input
+                type="date"
+                name="min_captured_at"
+                onChange={handleInputChange}
+                max={new Date().toISOString().split("T")[0]}
+                value={filters.min_captured_at || ""}
+              />
+            </div>
+            <div>
+              <Label className="mb-1 text-sm">To:</Label>
+              <Input
+                type="date"
+                name="max_captured_at"
+                onChange={handleInputChange}
+                max={new Date().toISOString().split("T")[0]}
+                value={filters.max_captured_at || ""}
+              />
+            </div>
+          </div>
+        </SidebarGroupContent>
+      </SidebarGroup>
+      <SidebarSeparator />
+      {/* Segmentation level filters */}
       <SidebarGroup>
         <SidebarGroupLabel>Models</SidebarGroupLabel>
         <SidebarGroupContent>
@@ -165,30 +224,40 @@ export function Filters() {
         </SidebarGroupContent>
       </SidebarGroup>
       <SidebarGroup>
-        <SidebarGroupLabel>Captured At</SidebarGroupLabel>
+        <SidebarGroupLabel>Model Runs</SidebarGroupLabel>
         <SidebarGroupContent>
-          <div className="space-y-2 ml-4">
-            <div>
-              <Label className="mb-1 text-sm">From:</Label>
-              <Input
-                type="date"
-                name="min_captured_at"
-                onChange={handleInputChange}
-                max={new Date().toISOString().split("T")[0]}
-                value={filters.min_captured_at || ""}
-              />
-            </div>
-            <div>
-              <Label className="mb-1 text-sm">To:</Label>
-              <Input
-                type="date"
-                name="max_captured_at"
-                onChange={handleInputChange}
-                max={new Date().toISOString().split("T")[0]}
-                value={filters.max_captured_at || ""}
-              />
-            </div>
-          </div>
+          <Combobox
+            items={runNames}
+            multiple
+            value={filters.model_runs}
+            onValueChange={(value) =>
+              handleMultiSelectChange("model_runs", value as string[])
+            }
+          >
+            <ComboboxChips>
+              <ComboboxValue>
+                {filters.model_runs.map((item) => (
+                  <ComboboxChip
+                    key={item}
+                    className="whitespace-normal break-all h-auto"
+                  >
+                    {item}
+                  </ComboboxChip>
+                ))}
+              </ComboboxValue>
+              <ComboboxChipsInput placeholder="Select run names..." />
+            </ComboboxChips>
+            <ComboboxContent>
+              <ComboboxEmpty>No runs found.</ComboboxEmpty>
+              <ComboboxList>
+                {(item) => (
+                  <ComboboxItem key={item} value={item}>
+                    {item}
+                  </ComboboxItem>
+                )}
+              </ComboboxList>
+            </ComboboxContent>
+          </Combobox>
         </SidebarGroupContent>
       </SidebarGroup>
       <SidebarGroup>
@@ -223,6 +292,14 @@ export function Filters() {
           </Combobox>
         </SidebarGroupContent>
       </SidebarGroup>
+      <RatingFilter
+        title="Segmentation Ratings"
+        values={filters.segmentation_ratings}
+        onToggle={(rating) =>
+          handleRatingToggle("segmentation_ratings", rating)
+        }
+      />
+      <SidebarSeparator />
       <SidebarGroup>
         <SidebarGroupContent>
           <Button

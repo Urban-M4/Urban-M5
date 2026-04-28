@@ -10,11 +10,13 @@ type ThemeProviderProps = {
 
 type ThemeProviderState = {
   theme: Theme;
+  isDarkMode: boolean;
   setTheme: (theme: Theme) => void;
 };
 
 const initialState: ThemeProviderState = {
   theme: "system",
+  isDarkMode: false,
   setTheme: () => null,
 };
 
@@ -29,27 +31,52 @@ export function ThemeProvider({
   const [theme, setTheme] = useState<Theme>(
     () => (localStorage.getItem(storageKey) as Theme) || defaultTheme,
   );
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
+    if (theme === "system") {
+      return window.matchMedia("(prefers-color-scheme: dark)").matches;
+    }
+
+    return theme === "dark";
+  });
 
   useEffect(() => {
     const root = window.document.documentElement;
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
-    root.classList.remove("light", "dark");
+    const applyTheme = (isSystemDark: boolean) => {
+      root.classList.remove("light", "dark");
 
-    if (theme === "system") {
-      const systemTheme = window.matchMedia("(prefers-color-scheme: dark)")
-        .matches
-        ? "dark"
-        : "light";
+      if (theme === "system") {
+        root.classList.add(isSystemDark ? "dark" : "light");
+        setIsDarkMode(isSystemDark);
+        return;
+      }
 
-      root.classList.add(systemTheme);
+      const nextIsDarkMode = theme === "dark";
+      root.classList.add(theme);
+      setIsDarkMode(nextIsDarkMode);
+    };
+
+    applyTheme(mediaQuery.matches);
+
+    if (theme !== "system") {
       return;
     }
 
-    root.classList.add(theme);
+    const handleSystemThemeChange = (event: MediaQueryListEvent) => {
+      applyTheme(event.matches);
+    };
+
+    mediaQuery.addEventListener("change", handleSystemThemeChange);
+
+    return () => {
+      mediaQuery.removeEventListener("change", handleSystemThemeChange);
+    };
   }, [theme]);
 
   const value = {
     theme,
+    isDarkMode,
     setTheme: (theme: Theme) => {
       localStorage.setItem(storageKey, theme);
       setTheme(theme);

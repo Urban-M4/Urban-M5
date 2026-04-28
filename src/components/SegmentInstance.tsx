@@ -5,7 +5,10 @@ import {
   useSegmentationActions,
 } from "@/hooks/streetscapes";
 import { Badge } from "@/components/ui/badge";
-import { useHoverSegmentationInstance } from "@/lib/store";
+import {
+  useAnnotationVisibility,
+  useHoverSegmentationInstance,
+} from "@/lib/store";
 import {
   ContextMenu,
   ContextMenuContent,
@@ -15,18 +18,21 @@ import {
   ContextMenuSubContent,
   ContextMenuSubTrigger,
   ContextMenuTrigger,
+  ContextMenuCheckboxItem,
 } from "./ui/context-menu";
 import { TrashIcon } from "lucide-react";
 
 interface SegmentInstanceProps {
   instance: Instance;
   segmentationId: string;
+  run_name: string;
   instanceIndex: number;
 }
 
 export function SegmentInstance({
   instance,
   segmentationId,
+  run_name,
   instanceIndex,
 }: SegmentInstanceProps) {
   const labels = useAllLabels();
@@ -38,6 +44,7 @@ export function SegmentInstance({
   } = useHoverSegmentationInstance();
   const currentImageId = useCurrentImageId()[0];
   const { setSegmentLabel } = useSegmentationActions();
+  const { toggleLabel, hiddenLabels } = useAnnotationVisibility();
 
   const color = labels[instance.label as keyof typeof labels] || "#6b7280";
   const isHovered =
@@ -68,12 +75,21 @@ export function SegmentInstance({
         <ContextMenuItem variant="destructive">
           <TrashIcon /> Delete
         </ContextMenuItem>
+        <ContextMenuCheckboxItem
+          checked={!hiddenLabels.has(instance.label)}
+          onCheckedChange={() => {
+            toggleLabel(instance.label);
+          }}
+        >
+          Toggle visibility
+        </ContextMenuCheckboxItem>
         <ContextMenuSub>
           <ContextMenuSubTrigger>Re-label</ContextMenuSubTrigger>
           <ContextMenuSubContent>
             <ContextMenuGroup>
               {Object.entries(labels)
                 .filter(([label]) => label !== instance.label)
+                .toSorted(([a], [b]) => a.localeCompare(b))
                 .map(([label, color]) => (
                   <ContextMenuItem
                     key={label}
@@ -82,7 +98,7 @@ export function SegmentInstance({
                         params: {
                           path: {
                             image_id: currentImageId!,
-                            segmentation_id: segmentationId,
+                            run_name,
                             instance_idx: instanceIndex,
                             label: label,
                           },

@@ -1,3 +1,4 @@
+import { renderToStaticMarkup } from "react-dom/server";
 import {
   type Instance,
   type Segmentation,
@@ -13,12 +14,13 @@ import {
   useAnnotator,
   type Color,
   type DrawingStyle,
-  ImageAnnotator,
   UserSelectAction,
   ShapeType,
   type AnnotoriousImageAnnotator,
   type Polygon,
   useHover,
+  OpenSeadragonAnnotator,
+  OpenSeadragonViewer,
 } from "@annotorious/react";
 import { useEffect, useState } from "react";
 
@@ -34,19 +36,37 @@ import {
   SelectValue,
 } from "./ui/select";
 import { LabelVisibilityMenu } from "./LabelVisibilityMenu";
+import type { Options } from "openseadragon";
+import {
+  FullscreenIcon,
+  HouseIcon,
+  ZoomInIcon,
+  ZoomOutIcon,
+} from "lucide-react";
+import { useTheme } from "./theme-provider";
 
 export function AnnotatedImage({
   id,
+  width,
+  height,
   url,
   segmentations,
 }: {
   id: string;
   url: string;
+  height: number;
+  width: number;
   segmentations: Segmentation[];
 }) {
   return (
     <Annotorious>
-      <RealAnnotatedImage url={url} id={id} segmentations={segmentations} />
+      <RealAnnotatedImage
+        url={url}
+        id={id}
+        height={height}
+        width={width}
+        segmentations={segmentations}
+      />
     </Annotorious>
   );
 }
@@ -127,14 +147,16 @@ function mapSegmentationsToAnnotations(
 }
 
 function parseAnnotationId(annotationId: string) {
+  // "seg:maskformer-2026-04-03T08:41:02.567:0:building:0"
+  // ->
+  // segmentationId = "maskformer-2026-04-03T08:41:02.567"
+  // instanceIndex = 0
+  // segmentationId aka segmentations.run column is user defined
   const parts = annotationId.split(":");
-  if (parts.length < 5) return null;
-
-  const instanceIndex = Number(parts[parts.length - 1]);
-  if (Number.isNaN(instanceIndex)) return null;
-
+  const instanceIndex = parseInt(parts[parts.length - 1], 10);
+  const segmentationId = parts.slice(1, -3).join(":");
   return {
-    segmentationId: parts[1],
+    segmentationId,
     instanceIndex,
   } as const;
 }
@@ -193,19 +215,113 @@ function LabelToDraw({
   );
 }
 
+function HoverInfo({
+  activeHoveredAnnotation,
+}: {
+  activeHoveredAnnotation?: ImageAnnotation;
+}) {
+  return (
+    <div className="flex h-8 flex-1 items-center rounded-lg border border-border px-3">
+      {activeHoveredAnnotation ? (
+        <span className="w-full truncate text-sm">
+          {activeHoveredAnnotation.bodies
+            .filter((b) => b.purpose === "tagging")
+            .map((b) => String(b.value))
+            .join(", ")}
+        </span>
+      ) : (
+        <span className="text-sm text-muted-foreground">
+          Shows segmentation label on image hover
+        </span>
+      )}
+    </div>
+  );
+}
+
+function useNavImages(): Options["navImages"] {
+  const { isDarkMode } = useTheme();
+
+  const iconToDataUri = (icon: React.ReactElement) => {
+    const svg = renderToStaticMarkup(icon);
+    return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
+  };
+
+  const navImage = ({
+    rest,
+    hover,
+    down,
+  }: {
+    rest: React.ReactElement;
+    hover: React.ReactElement;
+    down: React.ReactElement;
+  }) => ({
+    REST: iconToDataUri(rest),
+    GROUP: iconToDataUri(rest),
+    HOVER: iconToDataUri(hover),
+    DOWN: iconToDataUri(down),
+  });
+
+  const restColor = isDarkMode ? "oklch(0.985 0 0)" : "oklch(0.145 0 0)";
+  const hoverColor = "#fd9a00"; // Same accent as map
+  const downColor = "#fd9a00";
+  const size = 25;
+
+  const zoomInNavImage = navImage({
+    rest: <ZoomInIcon size={size} strokeWidth={2} stroke={restColor} />,
+    hover: <ZoomInIcon size={size} strokeWidth={2} stroke={hoverColor} />,
+    down: <ZoomInIcon size={size} strokeWidth={2} stroke={downColor} />,
+  });
+  const zoomOutNavImage = navImage({
+    rest: <ZoomOutIcon size={size} strokeWidth={2} stroke={restColor} />,
+    hover: <ZoomOutIcon size={size} strokeWidth={2} stroke={hoverColor} />,
+    down: <ZoomOutIcon size={size} strokeWidth={2} stroke={downColor} />,
+  });
+  const homeNavImage = navImage({
+    rest: <HouseIcon size={size} strokeWidth={2} stroke={restColor} />,
+    hover: <HouseIcon size={size} strokeWidth={2} stroke={hoverColor} />,
+    down: <HouseIcon size={size} strokeWidth={2} stroke={downColor} />,
+  });
+  const fullNavImage = navImage({
+    rest: <FullscreenIcon size={size} strokeWidth={2} stroke={restColor} />,
+    hover: <FullscreenIcon size={size} strokeWidth={2} stroke={hoverColor} />,
+    down: <FullscreenIcon size={size} strokeWidth={2} stroke={downColor} />,
+  });
+
+  const navImages = {
+    zoomIn: zoomInNavImage,
+    zoomOut: zoomOutNavImage,
+    home: homeNavImage,
+    fullpage: fullNavImage,
+    rotateleft: homeNavImage,
+    rotateright: homeNavImage,
+    flip: homeNavImage,
+    previous: homeNavImage,
+    next: homeNavImage,
+  };
+  return navImages;
+}
+
 function RealAnnotatedImage({
   url,
   id,
+  height,
+  width,
   segmentations,
 }: {
   url: string;
   id: string;
+  height: number;
+  width: number;
   segmentations: Segmentation[];
 }) {
   const allLabels = useAllLabels();
   const annot = useAnnotator<AnnotoriousImageAnnotator>();
   const [drawLabel, setDrawLabel] = useState(Object.keys(allLabels)[0]);
+  const [isPointerInImageArea, setIsPointerInImageArea] = useState(false);
   const hoveredAnnotation = useHover();
+  const activeHoveredAnnotation = isPointerInImageArea
+    ? hoveredAnnotation
+    : undefined;
   const annotations = mapSegmentationsToAnnotations(segmentations);
   const {
     segmentationId: hoveredSegmentationId,
@@ -230,18 +346,18 @@ function RealAnnotatedImage({
   });
 
   useEffect(() => {
-    if (!hoveredAnnotation) {
+    if (!activeHoveredAnnotation) {
       clearHover();
       return;
     }
 
-    const parsed = parseAnnotationId(hoveredAnnotation.id);
+    const parsed = parseAnnotationId(activeHoveredAnnotation.id);
     if (parsed) {
       setHover(parsed.segmentationId, parsed.instanceIndex);
     } else {
       clearHover();
     }
-  }, [hoveredAnnotation, setHover, clearHover]);
+  }, [activeHoveredAnnotation, setHover, clearHover]);
 
   useEffect(() => {
     if (!annot) return;
@@ -253,6 +369,7 @@ function RealAnnotatedImage({
         run_args: "",
         instances: [],
         notes: "",
+        rating: 0,
       };
       const manualSegmentation =
         segmentations.find((s) => s.model_name === "manual") ??
@@ -292,25 +409,50 @@ function RealAnnotatedImage({
     return style;
   };
 
+  const navImages = useNavImages();
+  const options: Options = {
+    tileSources: {
+      type: "image",
+      width,
+      height,
+      url,
+    },
+    maxZoomPixelRatio: 8,
+    drawer: "canvas",
+    prefixUrl: "",
+    navImages,
+  };
+
   return (
     <>
-      <div aria-label="Actions on image" className="flex gap-2">
+      <div aria-label="Actions on image" className="flex items-center gap-2">
         <LabelToDraw value={drawLabel} onChange={setDrawLabel} />
         <LabelVisibilityMenu />
+        <HoverInfo activeHoveredAnnotation={activeHoveredAnnotation} />
       </div>
-      <ImageAnnotator
+      <OpenSeadragonAnnotator
         tool="polygon"
         drawingEnabled={true}
         // Must be EDIT otherwise second draw fails
         userSelectAction={UserSelectAction.EDIT}
         style={annotaterStyle}
       >
-        <img
-          src={url}
-          alt={`Streetscape ${id}`}
-          className="max-w-full max-h-[80vh] object-contain"
-        />
-      </ImageAnnotator>
+        <div
+          onMouseEnter={() => setIsPointerInImageArea(true)}
+          onMouseLeave={() => {
+            setIsPointerInImageArea(false);
+            clearHover();
+          }}
+          className="w-full"
+          style={{ aspectRatio: `${width} / ${height}` }}
+        >
+          <OpenSeadragonViewer
+            key={id}
+            options={options}
+            className="size-full"
+          />
+        </div>
+      </OpenSeadragonAnnotator>
     </>
   );
 }

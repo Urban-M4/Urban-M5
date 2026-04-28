@@ -12,11 +12,15 @@ import "maplibre-gl/dist/maplibre-gl.css";
 
 import { useCurrentImageId, useImages } from "@/hooks/streetscapes";
 import { useTheme } from "@/components/theme-provider";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
+import { ZoomToImagesControl } from "./ZoomToImagesControl";
+
+const selectedMarkerCololr = "#fd9a00"; // tailwind orange-500
+const unselectedMarkerColor = "#007cbf"; // tailwind sky-600
 
 export function MapPanel() {
   const [currentImageId, setCurrentImageId] = useCurrentImageId();
-  const { theme } = useTheme();
+  const { isDarkMode } = useTheme();
   const mapRef = useRef<MapRef | null>(null);
   const { data: images = [] } = useImages();
   const [hoverInfo, setHoverInfo] = useState<{
@@ -25,10 +29,9 @@ export function MapPanel() {
     y: number;
   } | null>(null);
 
-  const mapStyle =
-    theme === "dark"
-      ? "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
-      : "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json";
+  const mapStyle = isDarkMode
+    ? "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
+    : "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json";
 
   // MapLibre forces id to number, while image id are strings
   const imageLookup: Record<string, number> = Object.fromEntries(
@@ -50,18 +53,6 @@ export function MapPanel() {
       },
     })),
   };
-
-  useEffect(() => {
-    if (!mapRef.current) return;
-    if (!mapRef.current.isStyleLoaded()) return;
-
-    images.forEach((image) => {
-      mapRef.current?.setFeatureState(
-        { source: "images", id: imageLookup[image.id] },
-        { selected: image.id === currentImageId },
-      );
-    });
-  }, [currentImageId, images, imageLookup]);
 
   function handleClick(event: MapLayerMouseEvent) {
     if (!mapRef.current) return;
@@ -101,6 +92,7 @@ export function MapPanel() {
       >
         <FullscreenControl position="top-left" />
         <NavigationControl position="top-left" />
+        <ZoomToImagesControl images={images} />
         <ScaleControl />
         <Source id="images" type="geojson" data={geojson}>
           <Layer
@@ -108,14 +100,20 @@ export function MapPanel() {
             type="circle"
             paint={{
               "circle-radius": 8,
-              "circle-color": [
-                "case",
-                ["boolean", ["feature-state", "selected"], false],
-                "#007cbf",
-                "rgba(0,0,0,0)",
-              ],
+              "circle-color": "rgba(0,0,0,0)",
               "circle-stroke-width": 8,
-              "circle-stroke-color": "#007cbf",
+              "circle-stroke-color": unselectedMarkerColor,
+            }}
+          />
+          <Layer
+            id="images-selected"
+            type="circle"
+            filter={["==", ["get", "id"], currentImageId ?? ""]}
+            paint={{
+              "circle-radius": 8,
+              "circle-color": selectedMarkerCololr,
+              "circle-stroke-width": 8,
+              "circle-stroke-color": selectedMarkerCololr,
             }}
           />
         </Source>
@@ -130,7 +128,7 @@ export function MapPanel() {
             <img
               src={hoverInfo.feature.properties.url}
               alt="Street view thumbnail"
-              className="w-32 h-32 object-cover rounded"
+              className="max-w-64 max-h-64 object-cover rounded"
             />
           </div>
         )}

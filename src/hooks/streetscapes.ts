@@ -35,6 +35,11 @@ export function useImages() {
   const query: ImagesQueryParams = {
     sources: filters.sources,
     tags: filters.tags,
+    labels: filters.labels,
+    models: filters.models,
+    image_ratings: filters.image_ratings,
+    segmentation_ratings: filters.segmentation_ratings,
+    model_runs: filters.model_runs,
   };
   if (filters.max_captured_at && filters.min_captured_at) {
     query.date_range = [filters.min_captured_at, filters.max_captured_at];
@@ -160,6 +165,11 @@ export function useAllModels() {
   return data.models;
 }
 
+export function useAllModelRunNames() {
+  const { data = placeholderStats } = useAggregateStats();
+  return data.model_run_names;
+}
+
 export function useImageActions() {
   const $api = useStreetscapes();
   // TODO do not repeat onSettled logic, reuse a common invalidate function
@@ -238,7 +248,25 @@ export function useSegmentationActions() {
   // eslint-disable-next-line react-compiler/react-compiler
   const { mutate: setSegmentLabel } = $api.useMutation(
     "post",
-    "/images/{image_id}/{segmentation_id}/{instance_idx}/{label}",
+    "/images/{image_id}/{run_name}/{instance_idx}/{label}",
+    {
+      onSettled(_data, _error, variables, _onMutateResult, context) {
+        context.client.invalidateQueries({
+          queryKey: [
+            "get",
+            "/images/{image_id}",
+            {
+              params: { path: { image_id: variables.params.path.image_id } },
+            },
+          ],
+        });
+      },
+    },
+  );
+  // eslint-disable-next-line react-compiler/react-compiler
+  const { mutate: setSegmentationRating } = $api.useMutation(
+    "post",
+    "/images/{image_id}/{run_name}/rating",
     {
       onSettled(_data, _error, variables, _onMutateResult, context) {
         context.client.invalidateQueries({
@@ -255,5 +283,6 @@ export function useSegmentationActions() {
   );
   return {
     setSegmentLabel,
+    setSegmentationRating,
   };
 }
